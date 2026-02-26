@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazing Kidz Preschool – South Extension, New Delhi</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+  🟢 SUPABASE SETUP — 100% FREE, NO CREDIT CARD NEEDED
+  ============================================================
+  STEP 1: Go to https://supabase.com → Click "Start your project"
+  STEP 2: Sign up FREE with Google or GitHub (no card needed)
+  STEP 3: Click "New Project" → Name: amazing-kidz → Set a DB password → Create
+  STEP 4: Wait ~2 minutes for project to be ready
+  STEP 5: Go to Settings → API → Copy "Project URL" and "anon public" key
+  STEP 6: Paste both values in SUPABASE_CONFIG section below
+  STEP 7: Go to SQL Editor → New Query → Copy the SQL block below → Run it
+  STEP 8: Go to Storage → New Bucket → Name: school-media → tick Public → Create
+  STEP 9: Go to Authentication → Providers → Email → Enable
+  STEP 10: Authentication → Users → Add User: admin@amazingkidz.com / Admin@123
+
+  🟢 DEPLOY ON NETLIFY — DRAG & DROP, NO COMMANDS NEEDED
+  ============================================================
+  STEP 1: Go to https://netlify.com → Sign up FREE (no card)
+  STEP 2: Rename this file to index.html
+  STEP 3: On Netlify dashboard → drag & drop the folder containing index.html
+  STEP 4: Your site is LIVE at: amazingkidz.netlify.app 🎉
+
+  🟢 SQL TO RUN IN SUPABASE SQL EDITOR (copy all lines below):
+  ============================================================
+  create table if not exists students (id uuid default gen_random_uuid() primary key, name text, roll text unique, prog text, dob text, parent text, phone text, created_at timestamptz default now());
+  create table if not exists fees (id uuid default gen_random_uuid() primary key, roll text, month text, amount text, status text, mode text, receipt text, date text, created_at timestamptz default now());
+  create table if not exists admissions (id uuid default gen_random_uuid() primary key, name text, dob text, gender text, prog text, father text, mother text, phone text, email text, address text, prev text, source text, status text default 'pending', roll text, date text, created_at timestamptz default now());
+  create table if not exists notices (id uuid default gen_random_uuid() primary key, title text, cat text, content text, date text, created_at timestamptz default now());
+  create table if not exists videos (id uuid default gen_random_uuid() primary key, title text, url text, description text, date text, created_at timestamptz default now());
+  create table if not exists banners (id uuid default gen_random_uuid() primary key, title text, sub text, img_url text, color text, created_at timestamptz default now());
+  create table if not exists activities (id uuid default gen_random_uuid() primary key, prog text, emoji text, name text, time text, description text, created_at timestamptz default now());
+  create table if not exists notebooks (id uuid default gen_random_uuid() primary key, prog text, title text, img_url text, date text, created_at timestamptz default now());
+  create table if not exists prog_details (id text primary key, name text, age text, fees text, admfee text, timing text, seats text, dress text, kit text, description text, updated_at timestamptz default now());
+  alter table students enable row level security; alter table fees enable row level security; alter table admissions enable row level security; alter table notices enable row level security; alter table videos enable row level security; alter table banners enable row level security; alter table activities enable row level security; alter table notebooks enable row level security; alter table prog_details enable row level security;
+  create policy "allow_all" on students for all using (true) with check (true);
+  create policy "allow_all" on fees for all using (true) with check (true);
+  create policy "allow_all" on admissions for all using (true) with check (true);
+  create policy "allow_all" on notices for all using (true) with check (true);
+  create policy "allow_all" on videos for all using (true) with check (true);
+  create policy "allow_all" on banners for all using (true) with check (true);
+  create policy "allow_all" on activities for all using (true) with check (true);
+  create policy "allow_all" on notebooks for all using (true) with check (true);
+  create policy "allow_all" on prog_details for all using (true) with check (true);
+  ============================================================ -->
+
+<!-- Supabase JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+// ============================================================
+// 🟢 PASTE YOUR SUPABASE CONFIG HERE
+// Get these from: supabase.com → Your Project → Settings → API
+// ============================================================
+const SUPABASE_URL = 'https://cacbqfzccpwihlogfrhm.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhY2JxZnpjY3B3aWhsb2dmcmhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDkzNzgsImV4cCI6MjA4NzYyNTM3OH0.x2amPbcYHS_BK1YVWwl6x44oWmk0zoGsDVRR9f2Ja80';
+// ============================================================
+
+const IS_CONFIGURED = !SUPABASE_URL.includes('YOUR_');
+let _sb = null;
+if(IS_CONFIGURED){
+  try { 
+    if(typeof supabase !== 'undefined') {
+      _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); 
+    } else {
+      // SDK not loaded yet — retry after page loads
+      window.addEventListener('load', function(){
+        try { _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+      });
+    }
+  }
+  catch(e){ console.error('Supabase init error:', e); }
+}
+// Aliases used by old code
+const db = null, storage = null, auth = null;
+</script>
+
+<style>
+:root {
+  --red:#e8192c; --red-dark:#c0151f; --gold:#f5a623; --gold-light:#ffd166;
+  --navy:#1a2557; --sky:#4fc3f7; --green:#27ae60; --white:#ffffff;
+  --light:#fff8f0; --grey:#f5f5f5; --text:#2c2c2c; --radius:16px;
+  --shadow:0 8px 32px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:var(--light);color:var(--text);}
+.hidden{display:none!important;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#f1f1f1;}
+::-webkit-scrollbar-thumb{background:var(--red);border-radius:3px;}
+
+/* SETUP BANNER */
+.setup-banner{background:linear-gradient(90deg,#ff6b35,#f7c59f);color:#fff;padding:14px 24px;text-align:center;font-weight:700;font-size:14px;position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:12px;}
+.setup-banner a{color:#fff;text-decoration:underline;cursor:pointer;}
+.setup-step{background:rgba(0,0,0,0.15);border-radius:8px;padding:4px 12px;font-size:12px;}
+
+/* TOP BAR */
+.topbar{background:var(--navy);color:#fff;font-size:12px;padding:6px 0;text-align:center;letter-spacing:.5px;}
+.topbar span{margin:0 12px;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 50%,#8b0000 100%);padding:0;position:sticky;top:0;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,0.3);}
+.header-inner{max-width:1300px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.logo-area{display:flex;align-items:center;gap:14px;padding:12px 0;cursor:pointer;}
+.logo-circle{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:22px;color:var(--red-dark);box-shadow:0 4px 16px rgba(245,166,35,0.5);flex-shrink:0;border:3px solid rgba(255,255,255,0.3);}
+.logo-text h1{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;line-height:1;text-shadow:2px 2px 4px rgba(0,0,0,0.3);}
+.logo-text p{font-size:10px;color:var(--gold-light);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+.logo-text small{font-size:9px;color:rgba(255,255,255,0.7);}
+nav{display:flex;align-items:center;gap:4px;}
+.nav-item{position:relative;}
+.nav-link{display:flex;align-items:center;gap:4px;padding:10px 14px;color:#fff;font-weight:600;font-size:13px;text-decoration:none;border-radius:8px;transition:all .2s;cursor:pointer;white-space:nowrap;background:none;border:none;font-family:'Poppins',sans-serif;}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.2);color:var(--gold-light);}
+.nav-link .arrow{font-size:10px;transition:.2s;}
+.nav-item:hover .arrow{transform:rotate(180deg);}
+.dropdown{position:absolute;top:calc(100% + 4px);left:0;background:#fff;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,0.18);min-width:200px;opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .2s;z-index:999;overflow:hidden;border-top:3px solid var(--red);}
+.nav-item:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0);}
+.dropdown a{display:block;padding:12px 20px;color:var(--text);font-size:13px;font-weight:600;text-decoration:none;transition:.2s;border-bottom:1px solid #f5f5f5;cursor:pointer;}
+.dropdown a:hover{background:var(--red);color:#fff;padding-left:28px;}
+.login-btn{background:var(--gold);color:var(--red-dark)!important;border-radius:20px;padding:8px 20px!important;font-weight:700!important;}
+.login-btn:hover{background:#fff!important;color:var(--red)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;}
+.hamburger span{width:24px;height:2px;background:#fff;border-radius:2px;}
+.mobile-nav{display:none;position:fixed;inset:0;background:var(--navy);z-index:9998;flex-direction:column;align-items:center;justify-content:center;gap:20px;}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{color:#fff;font-size:22px;font-family:'Fredoka One',cursive;text-decoration:none;cursor:pointer;}
+.mobile-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:44px;height:44px;border-radius:50%;font-size:20px;cursor:pointer;}
+
+/* PAGES */
+.page{display:none;animation:fadeIn .4s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+
+/* LOADING */
+.loading-spinner{display:flex;align-items:center;justify-content:center;padding:60px;flex-direction:column;gap:16px;}
+.spinner{width:48px;height:48px;border:4px solid #f0f0f0;border-top:4px solid var(--red);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-spinner p{color:#888;font-size:14px;}
+
+/* HERO */
+.hero{position:relative;background:linear-gradient(135deg,#fff8f0 0%,#ffe8e8 50%,#fff3cd 100%);overflow:hidden;padding:60px 20px;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(245,166,35,0.15),transparent 70%);border-radius:50%;}
+.hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-text h2{font-family:'Fredoka One',cursive;font-size:54px;line-height:1.1;color:var(--navy);margin-bottom:16px;}
+.hero-text h2 span{color:var(--red);}
+.hero-text p{font-size:16px;color:#555;line-height:1.8;margin-bottom:28px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn{padding:12px 28px;border-radius:50px;font-weight:700;font-size:14px;cursor:pointer;transition:all .25s;border:none;font-family:'Poppins',sans-serif;}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 4px 20px rgba(232,25,44,0.35);}
+.btn-red:hover{background:var(--red-dark);transform:translateY(-2px);}
+.btn-gold{background:var(--gold);color:#fff;}
+.btn-gold:hover{background:#e0951a;transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--red);border:2px solid var(--red);}
+.btn-outline:hover{background:var(--red);color:#fff;}
+.btn-sm{padding:8px 16px;font-size:12px;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-navy{background:var(--navy);color:#fff;}
+.hero-stats{display:flex;gap:24px;margin-top:28px;}
+.stat-box{text-align:center;background:#fff;border-radius:16px;padding:16px 20px;box-shadow:var(--shadow);flex:1;}
+.stat-box .num{font-family:'Fredoka One',cursive;font-size:32px;color:var(--red);line-height:1;}
+.stat-box .lbl{font-size:11px;color:#888;margin-top:4px;font-weight:600;}
+.hero-visual{display:flex;flex-direction:column;gap:16px;}
+.hero-card{background:#fff;border-radius:20px;padding:20px;box-shadow:var(--shadow);border-left:4px solid var(--red);}
+.hero-card h3{font-family:'Fredoka One',cursive;color:var(--navy);font-size:18px;}
+.hero-card p{font-size:12px;color:#777;margin-top:6px;}
+.prog-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.badge{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;color:#fff;cursor:pointer;}
+.badge-red{background:var(--red);}
+.badge-gold{background:var(--gold);}
+.badge-navy{background:var(--navy);}
+.badge-green{background:var(--green);}
+.badge-sky{background:#0288d1;}
+
+/* SECTION */
+.section{padding:60px 20px;max-width:1200px;margin:0 auto;}
+.section-title{text-align:center;margin-bottom:48px;}
+.section-title h2{font-family:'Fredoka One',cursive;font-size:40px;color:var(--navy);}
+.section-title h2 span{color:var(--red);}
+.section-title p{color:#666;margin-top:8px;font-size:15px;}
+.divider{width:60px;height:4px;background:linear-gradient(90deg,var(--red),var(--gold));border-radius:2px;margin:12px auto 0;}
+
+/* MARQUEE */
+.marquee-bar{background:var(--gold);color:var(--navy);padding:8px 0;overflow:hidden;white-space:nowrap;}
+.marquee-inner{display:inline-block;animation:marquee 30s linear infinite;font-weight:700;font-size:13px;padding-right:60px;}
+@keyframes marquee{from{transform:translateX(100vw);}to{transform:translateX(-100%);}};
+
+/* BANNER */
+.banner-zone{position:relative;border-radius:24px;overflow:hidden;margin-bottom:0;}
+.banner-slide{display:none;}
+.banner-slide.active{display:block;}
+.banner-visual{height:280px;display:flex;align-items:center;padding:40px;border-radius:24px;}
+.banner-visual h2{font-family:'Fredoka One',cursive;font-size:36px;color:#fff;text-shadow:2px 2px 8px rgba(0,0,0,0.3);}
+.banner-visual p{color:rgba(255,255,255,0.9);margin-top:8px;font-size:15px;}
+.banner-placeholder{height:280px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy),var(--red));flex-direction:column;gap:12px;color:#fff;border-radius:24px;font-family:'Fredoka One',cursive;font-size:24px;text-align:center;padding:20px;}
+.banner-dots{display:flex;gap:8px;justify-content:center;margin-top:12px;}
+.banner-dot{width:10px;height:10px;border-radius:50%;background:rgba(26,37,87,0.3);cursor:pointer;transition:.2s;}
+.banner-dot.active{background:var(--red);width:24px;border-radius:5px;}
+
+/* MEDIA */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+.video-card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:.3s;}
+.video-card:hover{transform:translateY(-4px);}
+.video-thumb{width:100%;height:180px;background:linear-gradient(135deg,var(--navy),var(--red));display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;overflow:hidden;}
+.video-thumb img{width:100%;height:100%;object-fit:cover;}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);}
+.play-btn{width:56px;height:56px;background:rgba(255,255,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;transition:.2s;}
+.play-btn:hover{background:#fff;transform:scale(1.1);}
+.video-info{padding:16px;}
+.video-info h4{font-weight:700;font-size:15px;color:var(--navy);}
+.video-info span{font-size:12px;color:#888;margin-top:4px;display:block;}
+.notice-card{background:#fff;border-radius:20px;padding:24px;box-shadow:var(--shadow);border-top:4px solid var(--gold);cursor:pointer;transition:.3s;}
+.notice-card:hover{transform:translateY(-4px);border-top-color:var(--red);}
+.notice-card .tag{display:inline-block;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;background:var(--gold);color:#fff;margin-bottom:8px;}
+.notice-card h4{font-weight:700;color:var(--navy);font-size:15px;margin-bottom:6px;}
+.notice-card p{font-size:13px;color:#666;line-height:1.6;}
+.notice-card .date{font-size:11px;color:#aaa;margin-top:8px;}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;}
+.feat-card{background:#fff;border-radius:20px;padding:24px 20px;text-align:center;box-shadow:var(--shadow);transition:.3s;}
+.feat-card:hover{transform:translateY(-4px);}
+.feat-icon{font-size:36px;margin-bottom:12px;}
+.feat-card h4{font-weight:700;font-size:14px;color:var(--navy);}
+.feat-card p{font-size:12px;color:#888;margin-top:6px;}
+
+/* PROGRAMMES */
+.prog-header{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:48px 20px;text-align:center;}
+.prog-header h2{font-family:'Fredoka One',cursive;font-size:44px;}
+.prog-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:24px 20px;background:#fff;border-bottom:2px solid #f0f0f0;position:sticky;top:80px;z-index:100;}
+.prog-tab{padding:10px 20px;border-radius:50px;font-weight:700;font-size:13px;cursor:pointer;border:2px solid #e0e0e0;background:#fff;transition:.2s;font-family:'Poppins',sans-serif;}
+.prog-tab.active,.prog-tab:hover{background:var(--red);color:#fff;border-color:var(--red);}
+.prog-content{display:none;padding:40px 20px;max-width:1200px;margin:0 auto;}
+.prog-content.active{display:block;}
+.prog-detail-grid{display:grid;grid-template-columns:1fr 2fr;gap:32px;margin-bottom:40px;}
+.prog-info-card{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow);}
+.prog-info-card h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--red);margin-bottom:20px;}
+.info-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px dashed #eee;font-size:14px;}
+.info-row .key{font-weight:600;color:var(--navy);}
+.info-row .val{color:#555;text-align:right;max-width:60%;}
+.activity-section{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow);}
+.activity-section h3{font-family:'Fredoka One',cursive;font-size:24px;color:var(--navy);margin-bottom:20px;}
+.activity-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+.activity-card{border-radius:16px;padding:20px;background:linear-gradient(135deg,#fff8f0,#fff);border:2px solid #f0e8e0;transition:.3s;}
+.activity-card:hover{border-color:var(--red);}
+.activity-card .emoji{font-size:28px;margin-bottom:8px;}
+.activity-card h4{font-weight:700;font-size:14px;color:var(--navy);}
+.activity-card p{font-size:12px;color:#777;margin-top:4px;}
+.notebook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:20px;}
+.notebook-img{border-radius:16px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:3/4;background:#f5f5f5;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:36px;position:relative;}
+.notebook-img img{width:100%;height:100%;object-fit:cover;}
+.notebook-img .date-tag{position:absolute;bottom:8px;left:8px;background:var(--red);color:#fff;font-size:10px;padding:3px 8px;border-radius:8px;font-weight:700;}
+
+/* STUDENT SEARCH */
+.search-box{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow);margin-bottom:32px;}
+.search-row{display:flex;gap:12px;align-items:flex-end;}
+.inp{padding:12px 16px;border:2px solid #e0e0e0;border-radius:12px;font-size:14px;font-family:'Poppins',sans-serif;flex:1;outline:none;transition:.2s;width:100%;}
+.inp:focus{border-color:var(--red);}
+.inp-label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+select.inp{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E") no-repeat right 14px center;}
+textarea.inp{resize:vertical;min-height:80px;}
+.student-card{background:#fff;border-radius:20px;padding:24px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;margin-bottom:20px;}
+.student-avatar{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:28px;color:#fff;flex-shrink:0;}
+.fee-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:13px;}
+.fee-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;}
+.fee-table td{padding:10px 14px;border-bottom:1px solid #f0f0f0;}
+.fee-table tr:hover td{background:#fafafa;}
+.paid{color:var(--green);font-weight:700;}
+.unpaid{color:var(--red);font-weight:700;}
+.partial{color:var(--gold);font-weight:700;}
+
+/* ADMISSIONS */
+.admission-header{background:linear-gradient(135deg,var(--navy),#2d3a7a);color:#fff;padding:48px 20px;text-align:center;}
+.admission-header h2{font-family:'Fredoka One',cursive;font-size:44px;}
+.seats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;margin-bottom:40px;}
+.seat-card{background:#fff;border-radius:20px;padding:24px;box-shadow:var(--shadow);text-align:center;border-top:4px solid var(--red);}
+.seat-card h4{font-family:'Fredoka One',cursive;font-size:20px;color:var(--navy);}
+.seat-progress{margin:12px 0;height:10px;background:#f0f0f0;border-radius:5px;overflow:hidden;}
+.seat-bar{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:5px;transition:.6s;}
+.seat-bar.full{background:linear-gradient(90deg,var(--red),#ff5722);}
+.seat-nums{display:flex;justify-content:space-between;font-size:12px;color:#888;}
+.prog-detail-block{background:#fff;border-radius:20px;margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow);}
+.prog-detail-head{background:linear-gradient(90deg,var(--red),var(--red-dark));color:#fff;padding:20px 28px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Fredoka One',cursive;font-size:22px;}
+.prog-detail-body{padding:28px;display:none;}
+.prog-detail-body.open{display:block;}
+.detail-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.detail-item{background:#f9f9f9;border-radius:12px;padding:16px;}
+.detail-item .dk{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.detail-item .dv{font-size:14px;color:#444;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;}
+.form-group.full{grid-column:1/-1;}
+.submit-area{grid-column:1/-1;text-align:center;margin-top:8px;}
+
+/* ADMIN */
+.admin-grid{display:grid;grid-template-columns:240px 1fr;gap:24px;padding:32px 20px;max-width:1400px;margin:0 auto;}
+.admin-sidebar{background:#fff;border-radius:20px;padding:20px;box-shadow:var(--shadow);height:fit-content;position:sticky;top:100px;}
+.admin-section-label{font-size:11px;font-weight:700;color:#aaa;letter-spacing:1px;margin-bottom:8px;margin-top:16px;padding:0 4px;}
+.admin-menu-item{padding:12px 16px;border-radius:12px;cursor:pointer;font-weight:600;font-size:13px;margin-bottom:4px;transition:.2s;display:flex;align-items:center;gap:10px;}
+.admin-menu-item:hover,.admin-menu-item.active{background:var(--red);color:#fff;}
+.admin-panel{display:none;}
+.admin-panel.active{display:block;}
+.admin-card{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow);margin-bottom:24px;}
+.admin-card h3{font-family:'Fredoka One',cursive;font-size:22px;color:var(--navy);margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #f0f0f0;}
+.upload-zone{border:3px dashed #ddd;border-radius:16px;padding:32px;text-align:center;cursor:pointer;transition:.3s;background:#fafafa;position:relative;}
+.upload-zone:hover{border-color:var(--red);background:#fff5f5;}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-zone .icon{font-size:40px;margin-bottom:8px;}
+.upload-zone p{font-size:13px;color:#888;}
+.upload-progress{margin-top:12px;height:6px;background:#f0f0f0;border-radius:3px;overflow:hidden;}
+.upload-bar{height:100%;background:var(--green);border-radius:3px;transition:.3s;}
+.data-table{width:100%;border-collapse:collapse;font-size:13px;}
+.data-table th{background:var(--navy);color:#fff;padding:12px 16px;text-align:left;font-weight:600;}
+.data-table td{padding:12px 16px;border-bottom:1px solid #f0f0f0;vertical-align:middle;}
+.data-table tr:hover td{background:#fafafa;}
+.status-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;display:inline-block;}
+.status-pending{background:#fff3cd;color:#856404;}
+.status-confirmed{background:#d1e7dd;color:#0f5132;}
+.status-rejected{background:#f8d7da;color:#842029;}
+.action-btn{padding:6px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'Poppins',sans-serif;transition:.2s;margin:2px;}
+.action-confirm{background:var(--green);color:#fff;}
+.action-reject{background:var(--red);color:#fff;}
+.action-edit{background:var(--gold);color:#fff;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:24px;}
+.stat-tile{border-radius:20px;padding:24px;color:#fff;text-align:center;}
+.stat-tile .big{font-family:'Fredoka One',cursive;font-size:40px;line-height:1;}
+.stat-tile .lbl{font-size:12px;opacity:.85;margin-top:6px;}
+
+/* ABOUT */
+.about-hero{background:linear-gradient(135deg,var(--gold),#ff9800);color:#fff;padding:60px 20px;text-align:center;}
+.about-hero h2{font-family:'Fredoka One',cursive;font-size:44px;}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:24px;}
+.team-card{background:#fff;border-radius:20px;padding:24px;text-align:center;box-shadow:var(--shadow);}
+.team-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;background:linear-gradient(135deg,var(--red),var(--gold));}
+.team-card h4{font-weight:700;color:var(--navy);}
+.team-card p{font-size:12px;color:#888;margin-top:4px;}
+
+/* LOGIN */
+.login-page{min-height:calc(100vh - 90px);display:flex;align-items:center;justify-content:center;padding:40px 20px;background:linear-gradient(135deg,#fff8f0,#ffe8e8);}
+.login-box{background:#fff;border-radius:28px;padding:48px;box-shadow:0 24px 64px rgba(0,0,0,0.15);width:100%;max-width:440px;}
+.login-box h2{font-family:'Fredoka One',cursive;font-size:32px;color:var(--navy);text-align:center;margin-bottom:6px;}
+.login-box p{text-align:center;color:#888;font-size:14px;margin-bottom:28px;}
+.login-roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.role-btn{padding:14px;border-radius:14px;border:2px solid #e0e0e0;background:#fff;cursor:pointer;text-align:center;transition:.2s;font-family:'Poppins',sans-serif;}
+.role-btn.selected,.role-btn:hover{border-color:var(--red);background:#fff5f5;}
+.role-btn .emoji{font-size:24px;display:block;margin-bottom:6px;}
+.role-btn span{font-size:12px;font-weight:700;color:var(--navy);}
+.firebase-info{background:#e8f5e9;border-radius:12px;padding:14px;font-size:12px;color:#2e7d32;margin-top:16px;line-height:1.7;}
+.firebase-info strong{display:block;margin-bottom:4px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+.modal-box{background:#fff;border-radius:24px;max-width:660px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.25);}
+.modal-head{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;border-radius:24px 24px 0 0;}
+.modal-head h3{font-family:'Fredoka One',cursive;font-size:24px;}
+.modal-close{background:rgba(255,255,255,0.2);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;}
+.modal-body{padding:28px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:30px;right:30px;background:var(--navy);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:600;z-index:99999;transform:translateX(200px);opacity:0;transition:.3s;max-width:360px;}
+.toast.show{transform:translateX(0);opacity:1;}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+.toast.info{background:var(--navy);}
+
+/* FIREBASE STATUS */
+.fs-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.fs-live{background:#e8f5e9;color:var(--green);}
+.fs-local{background:#fff3cd;color:#856404;}
+
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .prog-detail-grid{grid-template-columns:1fr;}
+  .detail-3col{grid-template-columns:1fr 1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .admin-grid{grid-template-columns:1fr;}
+  .admin-sidebar{position:static;}
+  nav{display:none;}
+  .hamburger{display:flex!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP BANNER (shown when Firebase not configured) -->
+<div class="setup-banner" id="setupBanner" style="display:none;">
+  ⚠️ Supabase not configured yet — data is using browser storage temporarily.
+  <span class="setup-step">Open this file → Find SUPABASE_URL → Paste your Supabase URL and key</span>
+  <a onclick="openSetupGuide()">📖 View Setup Guide</a>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span>📞 9891524876 | 9315928078 | 8076671261</span>
+  <span>📍 WZ-10 B, South Extension Part-1, Uttam Nagar, New Delhi – 110059</span>
+  <span>⏰ Mon–Sat: 8:00 AM – 2:00 PM</span>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area" onclick="showPage('home')">
+      <div class="logo-circle">AKP</div>
+      <div class="logo-text">
+        <h1>Amazing Kidz Preschool</h1>
+        <p>Where Every Child Shines ✨</p>
+        <small>Pre-Nursery • Nursery • K.G. | Montessori | Est. 2015</small>
+      </div>
+    </div>
+    <nav>
+      <div class="nav-item"><button class="nav-link active" onclick="showPage('home')">🏠 Home</button></div>
+      <div class="nav-item"><button class="nav-link" onclick="showPage('about')">ℹ️ About Us</button></div>
+      <div class="nav-item">
+        <button class="nav-link">📚 Programmes <span class="arrow">▾</span></button>
+        <div class="dropdown">
+          <a onclick="showProg('daycare')">🌙 Daycare</a>
+          <a onclick="showProg('prenursery')">🌱 Pre Nursery</a>
+          <a onclick="showProg('nursery')">🌸 Nursery</a>
+          <a onclick="showProg('kindergarten')">🌟 Kindergarten</a>
+          <a onclick="showProg('lkg')">🎓 LKG</a>
+        </div>
+      </div>
+      <div class="nav-item"><button class="nav-link" onclick="showPage('admissions')">📝 Admissions</button></div>
+      <div class="nav-item"><button class="nav-link" onclick="checkAdmin()">⚙️ Admin</button></div>
+      <div class="nav-item"><button class="nav-link login-btn" onclick="showPage('login')">🔐 Login</button></div>
+    </nav>
+    <div class="hamburger" onclick="toggleMobileNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" onclick="toggleMobileNav()">✕</button>
+  <a onclick="showPage('home');toggleMobileNav()">🏠 Home</a>
+  <a onclick="showPage('about');toggleMobileNav()">ℹ️ About Us</a>
+  <a onclick="showPage('programmes');toggleMobileNav()">📚 Programmes</a>
+  <a onclick="showPage('admissions');toggleMobileNav()">📝 Admissions</a>
+  <a onclick="checkAdmin();toggleMobileNav()">⚙️ Admin</a>
+  <a onclick="showPage('login');toggleMobileNav()">🔐 Login</a>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+<script>
+window.toggleMobileNav=function(){var n=document.getElementById('mobileNav');if(n)n.classList.toggle('open');}
+window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)o.classList.add('hidden');var b=document.getElementById('modalBody');if(b)b.innerHTML='';}
+</script>
+
+<!-- MODAL -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="modalTitle">Notice</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- =================== HOME PAGE =================== -->
+<div class="page active" id="page-home">
+  <div style="padding:20px 20px 0;max-width:1300px;margin:0 auto;">
+    <div id="bannerZone"><div class="banner-placeholder"><span>🏫</span><p>Loading banners...</p></div></div>
+  </div>
+  <div class="marquee-bar"><div class="marquee-inner">🌟 Welcome to Amazing Kidz Preschool! 🎒 Admissions Open for 2024-25 🏆 Air-Conditioned Classrooms | Montessori Education | CCTV Secure Campus | Expert Staff | Low Student-Teacher Ratio</div></div>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-text">
+        <h2>Nurturing <span>Little Minds,</span><br>Building Big Dreams</h2>
+        <p>At Amazing Kidz Preschool, we create a joyful, safe and stimulating environment where every child discovers their potential through play-based and Montessori learning.</p>
+        <div class="hero-btns">
+          <button class="btn btn-red" onclick="showPage('admissions')">📝 Apply Now</button>
+          <button class="btn btn-gold" onclick="showPage('programmes')">📚 Programmes</button>
+          <button class="btn btn-outline" onclick="showPage('about')">ℹ️ About Us</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-box"><div class="num" id="heroStudentCount">—</div><div class="lbl">Students</div></div>
+          <div class="stat-box"><div class="num">15+</div><div class="lbl">Teachers</div></div>
+          <div class="stat-box"><div class="num">10+</div><div class="lbl">Years</div></div>
+          <div class="stat-box"><div class="num">5★</div><div class="lbl">Rating</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <h3>🎯 Our Programmes</h3>
+          <p>Carefully designed curriculum for every developmental stage</p>
+          <div class="prog-badges">
+            <span class="badge badge-sky" onclick="showProg('daycare')">🌙 Daycare</span>
+            <span class="badge badge-green" onclick="showProg('prenursery')">🌱 Pre-Nursery</span>
+            <span class="badge badge-red" onclick="showProg('nursery')">🌸 Nursery</span>
+            <span class="badge badge-gold" onclick="showProg('kindergarten')">🌟 Kindergarten</span>
+            <span class="badge badge-navy" onclick="showProg('lkg')">🎓 LKG</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <h3>✅ Why Choose Us?</h3>
+          <p>Air-Conditioned • Montessori • CCTV Secure • Expert Staff • Co-curricular Activities • Low Teacher Ratio • Fun Zone</p>
+        </div>
+        <div class="hero-card">
+          <h3>📍 South Extension Part-1, Uttam Nagar</h3>
+          <p>New Delhi – 110059 | Easy access, safe & secure campus</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><h2>Why <span>Amazing Kidz?</span></h2><div class="divider"></div></div>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-icon">❄️</div><h4>AC Classrooms</h4><p>Comfortable learning all year</p></div>
+      <div class="feat-card"><div class="feat-icon">🎮</div><h4>Fun Zone</h4><p>Dedicated play area</p></div>
+      <div class="feat-card"><div class="feat-icon">📐</div><h4>Montessori</h4><p>Child-led exploration</p></div>
+      <div class="feat-card"><div class="feat-icon">📹</div><h4>CCTV Secured</h4><p>24/7 surveillance</p></div>
+      <div class="feat-card"><div class="feat-icon">👩‍🏫</div><h4>Expert Staff</h4><p>Certified educators</p></div>
+      <div class="feat-card"><div class="feat-icon">🎨</div><h4>Co-Curricular</h4><p>Art, Music, Dance, Yoga</p></div>
+      <div class="feat-card"><div class="feat-icon">📊</div><h4>Low Ratio</h4><p>1:8 teacher-student ratio</p></div>
+      <div class="feat-card"><div class="feat-icon">🎉</div><h4>Celebrations</h4><p>Events every month</p></div>
+    </div>
+  </div>
+  <div style="background:#f5f5f5;padding:60px 20px;">
+    <div class="section-title"><h2>📢 Latest <span>Notices</span></h2><div class="divider"></div></div>
+    <div style="max-width:1200px;margin:0 auto;">
+      <div id="noticesGrid" class="media-grid"><div class="loading-spinner"><div class="spinner"></div><p>Loading notices...</p></div></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><h2>🎬 School <span>Videos</span></h2><div class="divider"></div></div>
+    <div id="videosGrid" class="media-grid"><div class="loading-spinner"><div class="spinner"></div><p>Loading videos...</p></div></div>
+  </div>
+</div>
+
+<!-- =================== ABOUT PAGE =================== -->
+<div class="page" id="page-about">
+  <div class="about-hero"><h2>About Amazing Kidz Preschool</h2><p>Nurturing young minds since 2015 with love, care and Montessori excellence</p></div>
+  <div class="section">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-bottom:48px;">
+      <div>
+        <h3 style="font-family:'Fredoka One',cursive;font-size:32px;color:var(--navy);margin-bottom:16px;">Our <span style="color:var(--red)">Story</span></h3>
+        <p style="line-height:1.9;color:#555;font-size:15px;">Amazing Kidz Preschool was founded with a single vision: to give every child the best possible start in life. Located in the heart of South Extension Part-1, Uttam Nagar, we have been transforming young lives since 2015 with our unique blend of Montessori and play-based education.</p>
+        <p style="line-height:1.9;color:#555;font-size:15px;margin-top:12px;">Our school offers a warm, nurturing environment where children feel safe to explore, question, create and grow. With air-conditioned classrooms, CCTV-secured campus, expert staff, and a low student-to-teacher ratio, we ensure every child receives individual attention.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border-radius:20px;padding:24px;text-align:center;"><div style="font-size:32px;">🌟</div><div style="font-family:'Fredoka One',cursive;font-size:24px;margin-top:8px;">Vision</div><p style="font-size:13px;margin-top:8px;opacity:.9;">Most trusted preschool in Delhi NCR</p></div>
+        <div style="background:linear-gradient(135deg,var(--gold),#ff9800);color:#fff;border-radius:20px;padding:24px;text-align:center;"><div style="font-size:32px;">💡</div><div style="font-family:'Fredoka One',cursive;font-size:24px;margin-top:8px;">Mission</div><p style="font-size:13px;margin-top:8px;opacity:.9;">Holistic development of every child</p></div>
+        <div style="background:linear-gradient(135deg,var(--navy),#2d3a7a);color:#fff;border-radius:20px;padding:24px;text-align:center;"><div style="font-size:32px;">❤️</div><div style="font-family:'Fredoka One',cursive;font-size:24px;margin-top:8px;">Values</div><p style="font-size:13px;margin-top:8px;opacity:.9;">Respect, Kindness, Creativity</p></div>
+        <div style="background:linear-gradient(135deg,var(--green),#1e8449);color:#fff;border-radius:20px;padding:24px;text-align:center;"><div style="font-size:32px;">🏆</div><div style="font-family:'Fredoka One',cursive;font-size:24px;margin-top:8px;">Achieve</div><p style="font-size:13px;margin-top:8px;opacity:.9;">500+ successful alumni</p></div>
+      </div>
+    </div>
+    <div class="section-title"><h2>Meet Our <span>Team</span></h2><div class="divider"></div></div>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-avatar">👩‍💼</div><h4>Mrs. Sunita Sharma</h4><p>Principal & Founder</p></div>
+      <div class="team-card"><div class="team-avatar">👩‍🏫</div><h4>Ms. Priya Mehta</h4><p>Head of Academics</p></div>
+      <div class="team-card"><div class="team-avatar">👩‍🏫</div><h4>Ms. Anjali Verma</h4><p>Senior Teacher – LKG</p></div>
+      <div class="team-card"><div class="team-avatar">👩‍🏫</div><h4>Ms. Rekha Gupta</h4><p>Montessori Educator</p></div>
+      <div class="team-card"><div class="team-avatar">👨‍💻</div><h4>Mr. Rahul Singh</h4><p>Activity Coordinator</p></div>
+      <div class="team-card"><div class="team-avatar">👩‍⚕️</div><h4>Ms. Deepa Kapoor</h4><p>Student Counsellor</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== PROGRAMMES PAGE =================== -->
+<div class="page" id="page-programmes">
+  <div class="prog-header"><h2>📚 Our Programmes</h2><p>Comprehensive early childhood education tailored to every stage of development</p></div>
+  <div class="prog-tabs">
+    <button class="prog-tab active" onclick="switchProgTab('daycare')">🌙 Daycare</button>
+    <button class="prog-tab" onclick="switchProgTab('prenursery')">🌱 Pre Nursery</button>
+    <button class="prog-tab" onclick="switchProgTab('nursery')">🌸 Nursery</button>
+    <button class="prog-tab" onclick="switchProgTab('kindergarten')">🌟 Kindergarten</button>
+    <button class="prog-tab" onclick="switchProgTab('lkg')">🎓 LKG</button>
+  </div>
+  <div class="prog-content active" id="prog-daycare"><div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div></div>
+  <div class="prog-content" id="prog-prenursery"></div>
+  <div class="prog-content" id="prog-nursery"></div>
+  <div class="prog-content" id="prog-kindergarten"></div>
+  <div class="prog-content" id="prog-lkg"></div>
+  <div style="padding:40px 20px;max-width:1200px;margin:0 auto;border-top:2px solid #f0f0f0;">
+    <div class="section-title"><h2>🔍 Check Your <span>Ward's Details</span></h2><div class="divider"></div></div>
+    <div class="search-box">
+      <div class="search-row">
+        <div style="flex:1"><label class="inp-label">Student Name or Roll No</label><input class="inp" id="studentSearch" placeholder="Enter student name or roll number..."></div>
+        <button class="btn btn-red" onclick="searchStudent()">🔍 Search</button>
+      </div>
+    </div>
+    <div id="studentResult"></div>
+  </div>
+</div>
+
+<!-- =================== ADMISSIONS PAGE =================== -->
+<div class="page" id="page-admissions">
+  <div class="admission-header"><h2>📝 Admissions 2024-25</h2><p>Secure a bright future for your child at Amazing Kidz Preschool</p></div>
+  <div class="section">
+    <div class="section-title"><h2>🪑 Seat <span>Availability</span></h2><div class="divider"></div></div>
+    <div class="seats-grid" id="seatsGrid"><div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div></div>
+  </div>
+  <div style="background:#f5f5f5;padding:60px 20px;">
+    <div class="section-title"><h2>📋 Programme <span>Details</span></h2><div class="divider"></div><p>Click on each programme to view fees, timings, dress code and more</p></div>
+    <div style="max-width:1100px;margin:0 auto;" id="admissionDetails"><div class="loading-spinner"><div class="spinner"></div></div></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><h2>📄 Apply <span>Now</span></h2><div class="divider"></div></div>
+    <div style="background:#fff;border-radius:24px;padding:36px;box-shadow:var(--shadow);">
+      <div class="form-grid">
+        <div class="form-group"><label class="inp-label">Child's Full Name *</label><input class="inp" id="af-name" placeholder="Enter child's full name"></div>
+        <div class="form-group"><label class="inp-label">Date of Birth *</label><input class="inp" id="af-dob" type="date"></div>
+        <div class="form-group"><label class="inp-label">Gender *</label><select class="inp" id="af-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div class="form-group"><label class="inp-label">Programme *</label><select class="inp" id="af-prog"><option value="">Select Programme</option><option value="daycare">Daycare</option><option value="prenursery">Pre Nursery</option><option value="nursery">Nursery</option><option value="kindergarten">Kindergarten</option><option value="lkg">LKG</option></select></div>
+        <div class="form-group"><label class="inp-label">Father's Name *</label><input class="inp" id="af-father" placeholder="Father's full name"></div>
+        <div class="form-group"><label class="inp-label">Mother's Name</label><input class="inp" id="af-mother" placeholder="Mother's full name"></div>
+        <div class="form-group"><label class="inp-label">Contact Number *</label><input class="inp" id="af-phone" placeholder="10-digit mobile number"></div>
+        <div class="form-group"><label class="inp-label">Email Address</label><input class="inp" id="af-email" type="email" placeholder="parent@email.com"></div>
+        <div class="form-group full"><label class="inp-label">Residential Address *</label><textarea class="inp" id="af-address" placeholder="Full address with pin code"></textarea></div>
+        <div class="form-group"><label class="inp-label">Previous School (if any)</label><input class="inp" id="af-prev" placeholder="Name of previous school"></div>
+        <div class="form-group"><label class="inp-label">How did you hear about us?</label><select class="inp" id="af-source"><option value="">Select</option><option>Word of mouth</option><option>Google</option><option>Facebook</option><option>Banner/Hoarding</option><option>Other</option></select></div>
+        <div class="submit-area"><button class="btn btn-red" style="min-width:200px;" onclick="submitAdmissionForm()">🚀 Submit Application</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== ADMIN PAGE =================== -->
+<div class="page" id="page-admin">
+  <div style="background:linear-gradient(135deg,var(--navy),#2d3a7a);color:#fff;padding:32px 20px;">
+    <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <div><h2 style="font-family:'Fredoka One',cursive;font-size:36px;">⚙️ Admin Dashboard</h2><p style="opacity:.8;margin-top:4px;">Manage all school content, admissions, students and fee records</p></div>
+      <div id="fbStatusTag"></div>
+    </div>
+  </div>
+  <div class="admin-grid">
+    <div class="admin-sidebar">
+      <div class="admin-section-label">DASHBOARD</div>
+      <div class="admin-menu-item active" onclick="showAdminPanel('overview',this)">📊 Overview</div>
+      <div class="admin-section-label">CONTENT</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('banners',this)">🖼️ Banners & Posters</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('notices',this)">📢 Notices</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('videos',this)">🎬 Videos</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('notebooks',this)">📓 Notebook Photos</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('activities',this)">🗓️ Activities</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('progdetails',this)">📋 Programme Details</div>
+      <div class="admin-section-label">STUDENTS</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('admissions',this)">📝 Admission Requests</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('students',this)">👥 Students</div>
+      <div class="admin-menu-item" onclick="showAdminPanel('fees',this)">💰 Fee Management</div>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid #f0f0f0;">
+        <div class="admin-menu-item" onclick="adminLogout()" style="color:var(--red);">🚪 Logout</div>
+      </div>
+    </div>
+    <div>
+      <!-- OVERVIEW -->
+      <div class="admin-panel active" id="ap-overview">
+        <div class="stats-grid" id="statsCards"></div>
+        <div class="admin-card"><h3>🟢 Supabase Connection Status</h3><div id="fbConnectionInfo"></div></div>
+      </div>
+      <!-- BANNERS -->
+      <div class="admin-panel" id="ap-banners">
+        <div class="admin-card">
+          <h3>🖼️ Add Banner / Poster</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Banner Title *</label><input class="inp" id="b-title" placeholder="e.g. Annual Day 2024"></div>
+            <div class="form-group"><label class="inp-label">Sub Text</label><input class="inp" id="b-sub" placeholder="Short description"></div>
+            <div class="form-group"><label class="inp-label">Background Color</label><input class="inp" id="b-color" type="color" value="#1a2557"></div>
+            <div class="form-group"><label class="inp-label">Or paste Image URL</label><input class="inp" id="b-imgurl" placeholder="https://..."></div>
+            <div class="form-group full">
+              <label class="inp-label">Or Upload Image File</label>
+              <div class="upload-zone" id="bannerUploadZone">
+                <input type="file" id="b-file" accept="image/*" onchange="previewBannerFile(this)">
+                <div class="icon">🖼️</div>
+                <p><strong>Click to upload</strong> banner image (JPG, PNG)</p>
+                <p id="b-file-name" style="color:var(--green);margin-top:8px;font-weight:600;"></p>
+              </div>
+            </div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addBanner()">➕ Add Banner</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>Current Banners</h3><div id="bannersListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- NOTICES -->
+      <div class="admin-panel" id="ap-notices">
+        <div class="admin-card">
+          <h3>📢 Post New Notice</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Title *</label><input class="inp" id="n-title" placeholder="Notice title"></div>
+            <div class="form-group"><label class="inp-label">Category</label><select class="inp" id="n-cat"><option>General</option><option>Holiday</option><option>Event</option><option>Fee</option><option>Exam</option><option>Urgent</option></select></div>
+            <div class="form-group full"><label class="inp-label">Content *</label><textarea class="inp" id="n-content" placeholder="Notice content..."></textarea></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addNotice()">📢 Post Notice</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>Posted Notices</h3><div id="noticesListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- VIDEOS -->
+      <div class="admin-panel" id="ap-videos">
+        <div class="admin-card">
+          <h3>🎬 Add School Video</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Title *</label><input class="inp" id="v-title" placeholder="e.g. Sports Day 2024"></div>
+            <div class="form-group"><label class="inp-label">YouTube Video ID or URL *</label><input class="inp" id="v-url" placeholder="e.g. dQw4w9WgXcQ or full URL"></div>
+            <div class="form-group"><label class="inp-label">Description</label><input class="inp" id="v-desc" placeholder="Short description"></div>
+            <div class="form-group"><label class="inp-label">Date</label><input class="inp" id="v-date" type="date"></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addVideo()">🎬 Add Video</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>Posted Videos</h3><div id="videosListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- NOTEBOOKS -->
+      <div class="admin-panel" id="ap-notebooks">
+        <div class="admin-card">
+          <h3>📓 Upload Notebook Photos</h3>
+          <p style="font-size:13px;color:#666;margin-bottom:20px;">📱 Upload directly from your phone or laptop. Photos stored in Supabase Storage.</p>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Programme *</label><select class="inp" id="nb-prog"><option value="daycare">Daycare</option><option value="prenursery">Pre Nursery</option><option value="nursery">Nursery</option><option value="kindergarten">Kindergarten</option><option value="lkg">LKG</option></select></div>
+            <div class="form-group"><label class="inp-label">Subject / Title</label><input class="inp" id="nb-title" placeholder="e.g. Maths Practice – Dec 12"></div>
+            <div class="form-group"><label class="inp-label">Date</label><input class="inp" id="nb-date" type="date"></div>
+            <div class="form-group"><label class="inp-label">Or paste image URL</label><input class="inp" id="nb-urlpaste" placeholder="https://..."></div>
+            <div class="form-group full">
+              <label class="inp-label">📤 Upload Photo from Device</label>
+              <div class="upload-zone">
+                <input type="file" id="nb-file" accept="image/*" onchange="previewNbFile(this)">
+                <div class="icon">📷</div>
+                <p><strong>Click to select photo</strong> from phone or laptop</p>
+                <p id="nb-file-name" style="color:var(--green);margin-top:8px;font-weight:600;"></p>
+              </div>
+              <div class="upload-progress hidden" id="nb-progress-bar"><div class="upload-bar" id="nb-bar" style="width:0%"></div></div>
+              <p id="nb-progress-text" style="font-size:12px;color:var(--green);margin-top:6px;"></p>
+            </div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addNotebook()">📤 Upload Notebook Photo</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>Uploaded Photos</h3><div id="notebookListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- ACTIVITIES -->
+      <div class="admin-panel" id="ap-activities">
+        <div class="admin-card">
+          <h3>🗓️ Manage Daily Activities</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Programme *</label><select class="inp" id="act-prog"><option value="daycare">Daycare</option><option value="prenursery">Pre Nursery</option><option value="nursery">Nursery</option><option value="kindergarten">Kindergarten</option><option value="lkg">LKG</option></select></div>
+            <div class="form-group"><label class="inp-label">Activity Name *</label><input class="inp" id="act-name" placeholder="e.g. Story Time"></div>
+            <div class="form-group"><label class="inp-label">Time *</label><input class="inp" id="act-time" placeholder="e.g. 9:00 – 9:30 AM"></div>
+            <div class="form-group"><label class="inp-label">Emoji</label><input class="inp" id="act-emoji" placeholder="e.g. 📖"></div>
+            <div class="form-group full"><label class="inp-label">Description</label><input class="inp" id="act-desc" placeholder="Brief description"></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addActivity()">➕ Add Activity</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>All Activities</h3><div id="activitiesListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- PROG DETAILS -->
+      <div class="admin-panel" id="ap-progdetails">
+        <div class="admin-card">
+          <h3>📋 Update Programme Details</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Programme *</label><select class="inp" id="pd-prog" onchange="loadProgDetailsForm()"><option value="daycare">Daycare</option><option value="prenursery">Pre Nursery</option><option value="nursery">Nursery</option><option value="kindergarten">Kindergarten</option><option value="lkg">LKG</option></select></div>
+            <div class="form-group"><label class="inp-label">Age Group</label><input class="inp" id="pd-age" placeholder="e.g. 1.5 – 3 years"></div>
+            <div class="form-group"><label class="inp-label">Annual Fees ₹</label><input class="inp" id="pd-fees" placeholder="e.g. 35000"></div>
+            <div class="form-group"><label class="inp-label">Admission Fee ₹</label><input class="inp" id="pd-admfee" placeholder="e.g. 5000"></div>
+            <div class="form-group"><label class="inp-label">School Timings</label><input class="inp" id="pd-timing" placeholder="e.g. 8:30 AM – 12:30 PM"></div>
+            <div class="form-group"><label class="inp-label">Total Seats</label><input class="inp" id="pd-seats" type="number" placeholder="e.g. 30"></div>
+            <div class="form-group"><label class="inp-label">Dress Code</label><input class="inp" id="pd-dress" placeholder="e.g. Red & White uniform"></div>
+            <div class="form-group"><label class="inp-label">Kit Included</label><input class="inp" id="pd-kit" placeholder="e.g. Bag, Books, Stationery"></div>
+            <div class="form-group full"><label class="inp-label">Description</label><textarea class="inp" id="pd-desc" placeholder="Programme description..."></textarea></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="saveProgDetails()">💾 Save to Supabase</button></div>
+          </div>
+        </div>
+      </div>
+      <!-- ADMISSIONS MGMT -->
+      <div class="admin-panel" id="ap-admissions">
+        <div class="admin-card"><h3>📝 Pending Admission Requests</h3><div id="admReqTable"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+        <div class="admin-card"><h3>✅ Confirmed Admissions</h3><div id="confirmedAdmTable"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+      <!-- STUDENTS -->
+      <div class="admin-panel" id="ap-students">
+        <div class="admin-card">
+          <h3>👥 Add Student Manually</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Full Name *</label><input class="inp" id="s-name" placeholder="Student name"></div>
+            <div class="form-group"><label class="inp-label">Roll No *</label><input class="inp" id="s-roll" placeholder="e.g. 2024-LKG-001"></div>
+            <div class="form-group"><label class="inp-label">Programme *</label><select class="inp" id="s-prog"><option value="daycare">Daycare</option><option value="prenursery">Pre Nursery</option><option value="nursery">Nursery</option><option value="kindergarten">Kindergarten</option><option value="lkg">LKG</option></select></div>
+            <div class="form-group"><label class="inp-label">Date of Birth</label><input class="inp" id="s-dob" type="date"></div>
+            <div class="form-group"><label class="inp-label">Parent Name</label><input class="inp" id="s-parent" placeholder="Father/Mother name"></div>
+            <div class="form-group"><label class="inp-label">Phone</label><input class="inp" id="s-phone" placeholder="Contact number"></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addStudent()">➕ Add Student</button></div>
+          </div>
+        </div>
+        <div class="admin-card">
+          <h3>All Students</h3>
+          <div style="margin-bottom:12px;display:flex;gap:8px;">
+            <input class="inp" id="studentFilter" placeholder="Filter by name, roll or class..." style="max-width:300px;" oninput="filterStudents()">
+          </div>
+          <div id="studentsTable"><div class="loading-spinner"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+      <!-- FEES -->
+      <div class="admin-panel" id="ap-fees">
+        <div class="admin-card">
+          <h3>💰 Record Fee Payment</h3>
+          <div class="form-grid">
+            <div class="form-group"><label class="inp-label">Student Roll No *</label><input class="inp" id="f-roll" placeholder="e.g. 2024-LKG-001"></div>
+            <div class="form-group"><label class="inp-label">Month *</label><select class="inp" id="f-month"><option>April</option><option>May</option><option>June</option><option>July</option><option>August</option><option>September</option><option>October</option><option>November</option><option>December</option><option>January</option><option>February</option><option>March</option></select></div>
+            <div class="form-group"><label class="inp-label">Amount ₹ *</label><input class="inp" id="f-amount" type="number" placeholder="Amount paid"></div>
+            <div class="form-group"><label class="inp-label">Status *</label><select class="inp" id="f-status"><option>Paid</option><option>Partial</option><option>Unpaid</option></select></div>
+            <div class="form-group"><label class="inp-label">Payment Mode</label><select class="inp" id="f-mode"><option>Cash</option><option>UPI</option><option>Cheque</option><option>NEFT</option><option>Card</option></select></div>
+            <div class="form-group"><label class="inp-label">Receipt No</label><input class="inp" id="f-receipt" placeholder="Optional"></div>
+            <div class="submit-area"><button class="btn btn-red" onclick="addFee()">💾 Record Payment</button></div>
+          </div>
+        </div>
+        <div class="admin-card"><h3>Fee Records</h3><div id="feesTable"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =================== LOGIN PAGE =================== -->
+<div class="page" id="page-login">
+  <div class="login-page">
+    <div class="login-box">
+      <div style="text-align:center;font-size:48px;margin-bottom:12px;">🔐</div>
+      <h2>Welcome Back!</h2>
+      <p>Amazing Kidz Preschool Portal</p>
+      <div class="login-roles">
+        <div class="role-btn selected" id="role-admin" onclick="selectRole('admin')"><span class="emoji">👨‍💼</span><span>Admin</span></div>
+        <div class="role-btn" id="role-parent" onclick="selectRole('parent')"><span class="emoji">👨‍👩‍👧</span><span>Parent</span></div>
+      </div>
+      <div class="form-group" style="margin-bottom:16px;"><label class="inp-label" id="l-email-label">Email Address</label><input class="inp" id="l-user" placeholder="admin@amazingkidz.com" value="admin@amazingkidz.com"></div>
+      <div id="l-parent-roll-group" class="form-group hidden" style="margin-bottom:16px;"><label class="inp-label">Roll Number</label><input class="inp" id="l-roll" placeholder="Your ward's roll number"></div>
+      <div class="form-group" style="margin-bottom:24px;"><label class="inp-label">Password</label><input class="inp" id="l-pass" type="password" placeholder="Password" value="Admin@123"></div>
+      <button class="btn btn-red" style="width:100%;font-size:16px;" onclick="doLogin()">🚀 Login</button>
+      <div class="firebase-info" id="loginHint">
+        <strong>🟢 Supabase Auth Active</strong>
+        Admin: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7011141d191e30111d110a191e171b19140a5e131f1d">[email&#160;protected]</a> / Admin@123<br>
+        Parent: Enter roll number + phone as password
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="background:var(--navy);color:#fff;padding:48px 20px 20px;">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:36px;margin-bottom:36px;">
+    <div><div style="font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:12px;color:var(--gold);">Amazing Kidz Preschool</div><p style="font-size:13px;opacity:.8;line-height:1.8;">Nurturing young minds since 2015 with love, care & Montessori excellence.</p></div>
+    <div><div style="font-weight:700;margin-bottom:12px;color:var(--gold);">Quick Links</div><div style="display:flex;flex-direction:column;gap:8px;font-size:13px;opacity:.8;"><a onclick="showPage('home')" style="color:#fff;text-decoration:none;cursor:pointer;">🏠 Home</a><a onclick="showPage('about')" style="color:#fff;text-decoration:none;cursor:pointer;">ℹ️ About Us</a><a onclick="showPage('programmes')" style="color:#fff;text-decoration:none;cursor:pointer;">📚 Programmes</a><a onclick="showPage('admissions')" style="color:#fff;text-decoration:none;cursor:pointer;">📝 Admissions</a></div></div>
+    <div><div style="font-weight:700;margin-bottom:12px;color:var(--gold);">Programmes</div><div style="display:flex;flex-direction:column;gap:8px;font-size:13px;opacity:.8;"><a onclick="showProg('daycare')" style="color:#fff;text-decoration:none;cursor:pointer;">🌙 Daycare</a><a onclick="showProg('prenursery')" style="color:#fff;text-decoration:none;cursor:pointer;">🌱 Pre Nursery</a><a onclick="showProg('nursery')" style="color:#fff;text-decoration:none;cursor:pointer;">🌸 Nursery</a><a onclick="showProg('kindergarten')" style="color:#fff;text-decoration:none;cursor:pointer;">🌟 Kindergarten</a><a onclick="showProg('lkg')" style="color:#fff;text-decoration:none;cursor:pointer;">🎓 LKG</a></div></div>
+    <div><div style="font-weight:700;margin-bottom:12px;color:var(--gold);">Contact Us</div><div style="font-size:13px;opacity:.8;line-height:2;"><div>📞 9891524876</div><div>📞 9315928078</div><div>📞 8076671261</div><div>📍 WZ-10 B, South Extension Part-1</div><div>Uttam Nagar, New Delhi – 110059</div><div>⏰ Mon–Sat: 8:00 AM – 2:00 PM</div></div></div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:20px;text-align:center;font-size:13px;opacity:.6;">© 2024 Amazing Kidz Preschool. All rights reserved. | Powered by 🟢 Supabase + Netlify</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ============================================================
+// DEFAULT DATA (seeded to Firestore on first run)
+// ============================================================
+const DEFAULT_PROGS = {
+  daycare:     { name:'Daycare',      age:'3 months – 3 years', fees:'45000', admfee:'5000', timing:'7:30 AM – 6:00 PM',    seats:20, dress:'Comfortable casuals, bibs provided',  kit:'Daycare kit, towel, feeding essentials',   desc:'Full-day care with structured play, nap time, meals and early learning for infants and toddlers under expert supervision.' },
+  prenursery:  { name:'Pre Nursery',  age:'2 – 3.5 years',      fees:'32000', admfee:'4000', timing:'8:30 AM – 12:00 PM',  seats:25, dress:'Navy blue & white uniform',            kit:'School bag, books, crayons, water bottle', desc:'Gentle introduction to school life through songs, stories, sensory play and social interaction.' },
+  nursery:     { name:'Nursery',      age:'3 – 4 years',         fees:'36000', admfee:'4500', timing:'8:30 AM – 12:30 PM',  seats:30, dress:'Red & white uniform',                  kit:'School bag, workbooks, art kit',           desc:'Holistic Montessori-based curriculum covering language, numbers, creativity and motor skills.' },
+  kindergarten:{ name:'Kindergarten', age:'4 – 5 years',         fees:'40000', admfee:'5000', timing:'8:30 AM – 1:00 PM',   seats:30, dress:'Red & white uniform',                  kit:'School bag, CBSE books, activity kit',     desc:'Structured curriculum preparing children for primary school with literacy, numeracy, science and social studies basics.' },
+  lkg:         { name:'LKG',          age:'5 – 6 years',         fees:'44000', admfee:'5500', timing:'8:00 AM – 1:30 PM',   seats:30, dress:'Navy blue & white uniform',            kit:'CBSE books, bag, geometry box, art supplies', desc:'Comprehensive LKG curriculum aligned with CBSE standards covering all core subjects and personality development.' }
+};
+
+const DEFAULT_ACTIVITIES = [
+  { prog:'daycare',     emoji:'🍼', name:'Feeding & Nap Time',    time:'9:00 – 10:00 AM',  desc:'Supervised feeding and morning nap for infants' },
+  { prog:'daycare',     emoji:'🧸', name:'Sensory Play',          time:'10:30 – 11:30 AM', desc:'Touch, feel and explore with soft toys and textures' },
+  { prog:'daycare',     emoji:'🎵', name:'Rhymes & Music',        time:'12:00 – 12:30 PM', desc:'Sing-along nursery rhymes and lullabies' },
+  { prog:'prenursery',  emoji:'📖', name:'Story Time',            time:'9:00 – 9:30 AM',   desc:'Interactive storytelling with picture books' },
+  { prog:'prenursery',  emoji:'🎨', name:'Art & Craft',           time:'9:30 – 10:30 AM',  desc:'Drawing, colouring and basic craft activities' },
+  { prog:'prenursery',  emoji:'🏃', name:'Outdoor Play',          time:'11:00 – 11:30 AM', desc:'Supervised play in the garden and sandpit' },
+  { prog:'nursery',     emoji:'🔤', name:'Language Activity',     time:'9:00 – 9:45 AM',   desc:'Phonics, alphabet tracing and word recognition' },
+  { prog:'nursery',     emoji:'🔢', name:'Numbers & Maths',       time:'9:45 – 10:30 AM',  desc:'Counting, sorting, shapes and basic arithmetic' },
+  { prog:'nursery',     emoji:'🌿', name:'Nature Study',          time:'11:00 – 11:30 AM', desc:'Plants, animals and environment exploration' },
+  { prog:'kindergarten',emoji:'📚', name:'English Reading',       time:'8:30 – 9:30 AM',   desc:'Reading comprehension and writing practice' },
+  { prog:'kindergarten',emoji:'🔢', name:'Maths',                 time:'9:30 – 10:30 AM',  desc:'Numbers up to 100, addition, subtraction' },
+  { prog:'kindergarten',emoji:'🌍', name:'EVS',                   time:'10:45 – 11:30 AM', desc:'Environmental Science – Family, Community, Nature' },
+  { prog:'lkg',         emoji:'📝', name:'English & Hindi',       time:'8:00 – 9:00 AM',   desc:'Reading, writing, dictation and grammar basics' },
+  { prog:'lkg',         emoji:'🔢', name:'Mathematics',           time:'9:00 – 10:00 AM',  desc:'Numbers, tables, basic geometry and word problems' },
+  { prog:'lkg',         emoji:'🔬', name:'Science & EVS',         time:'10:15 – 11:00 AM', desc:'Basic science and environmental awareness' },
+  { prog:'lkg',         emoji:'🏅', name:'Co-Curricular',         time:'11:00 – 1:30 PM',  desc:'Music, dance, yoga, games and personality development' }
+];
+
+const DEFAULT_NOTICES = [
+  { title:'Winter Break Notice',     cat:'Holiday', content:'School will remain closed from December 25, 2024 to January 5, 2025 for winter break. Classes will resume on January 6, 2025.', date:'2024-12-15' },
+  { title:'Fee Submission Last Date',cat:'Fee',     content:'Parents are requested to submit monthly fee by the 10th of every month to avoid late charges of ₹100 per day.', date:'2024-12-10' },
+  { title:'Annual Day Programme',    cat:'Event',   content:'Annual Day celebration scheduled for December 28, 2024. All parents are cordially invited. Children should report by 9:30 AM in performance costumes.', date:'2024-12-08' }
+];
+
+const DEFAULT_STUDENTS = [
+  { name:'Aarav Sharma',  roll:'2024-LKG-001', prog:'lkg',         dob:'2019-03-15', parent:'Rajesh Sharma',  phone:'9876543210' },
+  { name:'Priya Verma',   roll:'2024-KG-002',  prog:'kindergarten',dob:'2020-05-20', parent:'Suresh Verma',   phone:'9876543211' },
+  { name:'Rohan Gupta',   roll:'2024-NR-003',  prog:'nursery',     dob:'2021-01-10', parent:'Amit Gupta',     phone:'9876543212' },
+  { name:'Sneha Mehta',   roll:'2024-PN-004',  prog:'prenursery',  dob:'2022-08-05', parent:'Vikram Mehta',   phone:'9876543213' }
+];
+
+const DEFAULT_FEES = [
+  { roll:'2024-LKG-001', month:'April', amount:'3667', status:'Paid',    mode:'UPI',  receipt:'RCP001' },
+  { roll:'2024-LKG-001', month:'May',   amount:'3667', status:'Paid',    mode:'Cash', receipt:'RCP002' },
+  { roll:'2024-KG-002',  month:'April', amount:'3333', status:'Partial', mode:'Cash', receipt:'RCP003' },
+  { roll:'2024-NR-003',  month:'April', amount:'3000', status:'Unpaid',  mode:'',     receipt:'' }
+];
+
+// ============================================================
+// DATA LAYER — Supabase + localStorage fallback
+// ============================================================
+const LS = {
+  get: k => { try { return JSON.parse(localStorage.getItem('akp_'+k)); } catch { return null; } },
+  set: (k,v) => localStorage.setItem('akp_'+k, JSON.stringify(v)),
+  getArr: k => LS.get(k) || [],
+  push: (k,v) => { const a=LS.getArr(k); const item={...v,id:'ls_'+Date.now()+'_'+Math.random().toString(36).slice(2),created_at:new Date().toISOString()}; a.unshift(item); LS.set(k,a); return item; }
+};
+
+const DATA = {
+  getAll: async (col, filter=null) => {
+    if(IS_CONFIGURED && _sb) {
+      try {
+        let q = _sb.from(col).select('*');
+        if(col!=='prog_details') q = q.order('created_at',{ascending:false});
+        if(filter) q = q.eq(filter.col, filter.val);
+        const {data,error} = await q;
+        if(!error && data) return data;
+        console.warn('Supabase getAll error:',error?.message);
+      } catch(e) { console.warn('Supabase getAll fallback:',e); }
+    }
+    const arr=LS.getArr(col);
+    return filter ? arr.filter(r=>r[filter.col]===filter.val) : arr;
+  },
+  getAllWhere: async (col, field, op, val) => {
+    if(IS_CONFIGURED && _sb) {
+      try {
+        let q = _sb.from(col).select('*');
+        if(col!=='prog_details') q = q.order('created_at',{ascending:false});
+        if(op==='==') q = q.eq(field, val);
+        const {data,error} = await q;
+        if(!error && data) return data;
+      } catch(e) { console.warn('Supabase getAllWhere fallback:',e); }
+    }
+    return LS.getArr(col).filter(r => op==='==' ? r[field]===val : r[field]!==val);
+  },
+  getDoc: async (col, docId) => {
+    if(IS_CONFIGURED && _sb) {
+      try {
+        const {data,error} = await _sb.from(col).select('*').eq('id', docId).maybeSingle();
+        if(!error && data) return data;
+        if(error) console.warn('Supabase getDoc error:',error?.message);
+      } catch(e) { console.warn('Supabase getDoc fallback:',e); }
+    }
+    return LS.get(col+'_'+docId) || null;
+  },
+  add: async (col, data) => {
+    const item = {...data, created_at: new Date().toISOString()};
+    if(IS_CONFIGURED && _sb) {
+      try {
+        const {data:d,error} = await _sb.from(col).insert(item).select().single();
+        if(!error && d){ showToast('✅ Saved to Supabase','success'); return d; }
+        console.warn('Supabase add error:',error?.message);
+      } catch(e) { console.warn('Supabase add fallback:',e); }
+    }
+    return LS.push(col, data);
+  },
+  setDoc: async (col, docId, data) => {
+    const item = {...data, id:docId, updated_at: new Date().toISOString()};
+    if(IS_CONFIGURED && _sb) {
+      try {
+        const {data:d,error} = await _sb.from(col).upsert(item,{onConflict:'id'}).select().single();
+        if(!error){ showToast('✅ Saved to Supabase','success'); return d||item; }
+        console.warn('Supabase setDoc error:',error?.message);
+      } catch(e) { console.warn('Supabase setDoc fallback:',e); }
+    }
+    LS.set(col+'_'+docId, item); return item;
+  },
+  update: async (col, docId, data) => {
+    if(IS_CONFIGURED && _sb) {
+      try {
+        const {error} = await _sb.from(col).update({...data,updated_at:new Date().toISOString()}).eq('id',docId);
+        if(!error) return true;
+      } catch(e) {}
+    }
+    const arr=LS.getArr(col); const i=arr.findIndex(r=>r.id===docId);
+    if(i>=0){arr[i]={...arr[i],...data};LS.set(col,arr);} return true;
+  },
+  delete: async (col, docId) => {
+    if(IS_CONFIGURED && _sb) {
+      try { const {error}=await _sb.from(col).delete().eq('id',docId); if(!error) return true; } catch(e){}
+    }
+    LS.set(col, LS.getArr(col).filter(r=>r.id!==docId)); return true;
+  },
+  uploadFile: async (file, path, onProgress) => {
+    if(IS_CONFIGURED && _sb) {
+      try {
+        if(onProgress) onProgress(40);
+        const {data,error} = await _sb.storage.from('school-media').upload(path, file, {upsert:true});
+        if(!error){
+          if(onProgress) onProgress(100);
+          const {data:urlData} = _sb.storage.from('school-media').getPublicUrl(path);
+          return urlData.publicUrl;
+        }
+        console.warn('Storage upload error:',error?.message);
+      } catch(e) { console.warn('Storage fallback:',e); }
+    }
+    return new Promise(resolve=>{
+      const reader=new FileReader();
+      reader.onload=e=>{ if(onProgress)onProgress(100); resolve(e.target.result); };
+      reader.readAsDataURL(file);
+    });
+  }
+};
+
+// ============================================================
+// SEED DEFAULT DATA (runs once if collections are empty)
+// ============================================================
+async function seedDefaultData() {
+  if(LS.get('seeded_v5')) return;
+  showToast('Setting up school data for first time...','info');
+  try {
+    // Seed notices
+    for(const n of DEFAULT_NOTICES) await DATA.add('notices', n);
+    // Seed activities
+    for(const a of DEFAULT_ACTIVITIES) await DATA.add('activities', a);
+    // Seed students
+    for(const s of DEFAULT_STUDENTS) await DATA.add('students', s);
+    // Seed fees
+    for(const f of DEFAULT_FEES) await DATA.add('fees', f);
+    // Seed prog details
+    for(const [key,val] of Object.entries(DEFAULT_PROGS)) await DATA.setDoc('prog_details', key, val);
+    // Seed banners
+    await DATA.add('banners', {title:'Welcome to Amazing Kidz Preschool! 🎉', sub:'Admissions Open for 2024-25 | Air-Conditioned | CCTV Secured | Montessori Education', color:'#1a2557'});
+    await DATA.add('banners', {title:'Annual Day Celebrations 🎊', sub:'Join us for our Grand Annual Day on December 28th, 2024 at 10:00 AM', color:'#c0151f'});
+    LS.set('seeded_v5', true);
+    showToast('School data loaded successfully! 🎉','success');
+  } catch(e) { console.error('Seed error:',e); LS.set('seeded_v5', true); }
+}
+
+// ============================================================
+// AUTH STATE
+// ============================================================
+let currentUser = LS.get('session');
+let selectedRole = 'admin';
+let allStudentsCache = [];
+
+function selectRole(r) {
+  selectedRole=r;
+  document.querySelectorAll('.role-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('role-'+r).classList.add('selected');
+  const rollGroup = document.getElementById('l-parent-roll-group');
+  const emailLabel = document.getElementById('l-email-label');
+  if(r==='parent'){
+    rollGroup.classList.remove('hidden');
+    emailLabel.textContent='Phone Number';
+    document.getElementById('l-user').value='';
+    document.getElementById('l-user').placeholder='Your phone number';
+  } else {
+    rollGroup.classList.add('hidden');
+    emailLabel.textContent='Email Address';
+    document.getElementById('l-user').value='admin@amazingkidz.com';
+    document.getElementById('l-user').placeholder='admin@amazingkidz.com';
+  }
+}
+
+async function doLogin() {
+  const pass = document.getElementById('l-pass').value.trim();
+  if(selectedRole==='admin') {
+    const email = document.getElementById('l-user').value.trim();
+    if(IS_CONFIGURED && _sb) {
+      try {
+        showToast('Signing in...','info');
+        const {data,error} = await _sb.auth.signInWithPassword({email, password:pass});
+        if(!error && data.user) {
+          currentUser = {role:'admin', name:'Admin', email:data.user.email};
+          LS.set('session', currentUser);
+          showToast('Welcome Admin! 👋','success');
+          showPage('admin');
+          return;
+        }
+        if(error){ showToast('Invalid email or password','error'); return; }
+      } catch(e) { console.warn('Auth fallback'); }
+    }
+    // Fallback local admin
+    if((email==='admin@amazingkidz.com'||email==='admin')&&(pass==='Admin@123'||pass==='admin123')) {
+      currentUser={role:'admin',name:'Admin'}; LS.set('session',currentUser);
+      showToast('Welcome Admin! 👋 (Local mode)','success'); showPage('admin');
+    } else { showToast('Invalid credentials','error'); }
+  } else {
+    // Parent login — roll no + phone
+    const roll = document.getElementById('l-roll').value.trim();
+    const phone = pass; // password field used for phone
+    if(!roll){ showToast('Enter roll number','error'); return; }
+    const students = await DATA.getAll('students');
+    const found = students.find(s=>s.roll.toLowerCase()===roll.toLowerCase() && s.phone===phone);
+    if(found){ currentUser={role:'parent',name:found.parent,studentRoll:found.roll}; LS.set('session',currentUser); showToast('Welcome! 👋','success'); showPage('programmes'); }
+    else { showToast('Roll number or phone not matching','error'); }
+  }
+}
+
+function adminLogout() {
+  if(IS_CONFIGURED && _sb) try { _sb.auth.signOut(); } catch(e){}
+  currentUser=null; LS.set('session',null);
+  showToast('Logged out successfully');
+  showPage('home');
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  var pg=document.getElementById('page-'+p); if(!pg) return;
+  pg.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='home')       renderHome();
+  if(p==='programmes') renderProgrammes();
+  if(p==='admissions') renderAdmissions();
+  if(p==='admin') {
+    if(!currentUser||currentUser.role!=='admin'){showToast('Please login as Admin first','error');showPage('login');return;}
+    renderAdmin();
+  }
+}
+
+function showProg(prog) {
+  showPage('programmes');
+  setTimeout(()=>switchProgTab(prog), 200);
+}
+
+function checkAdmin() {
+  if(!currentUser||currentUser.role!=='admin'){showToast('Please login as Admin first','error');showPage('login');return;}
+  showPage('admin');
+}
+
+function checkAdminAccess() {
+  if(!currentUser||currentUser.role!=='admin'){showToast('Please login as Admin first','error');showPage('login');return false;}
+  return true;
+}
+
+function toggleMobileNav(){ document.getElementById('mobileNav').classList.toggle('open'); }
+
+// ============================================================
+// HOME PAGE
+// ============================================================
+async function renderHome() {
+  renderBanners();
+  renderHomeNotices();
+  renderHomeVideos();
+  // Update student count
+  const students = await DATA.getAll('students');
+  document.getElementById('heroStudentCount').textContent = students.length + '+';
+}
+
+// BANNERS
+async function renderBanners() {
+  const banners = await DATA.getAll('banners');
+  const zone = document.getElementById('bannerZone');
+  if(!banners.length) {
+    zone.innerHTML=`<div class="banner-placeholder"><span>🏫</span><h2>Amazing Kidz Preschool</h2><p>No banners yet — Admin can add from the Admin panel</p></div>`;
+    return;
+  }
+  const colors = ['#1a2557','#c0151f','#27ae60','#f5a623','#0288d1'];
+  let slides = banners.map((b,i)=>{
+    const bg = b.color||colors[i%colors.length];
+    const content = b.imgUrl
+      ? `<div style="position:relative;"><img src="${b.imgUrl}" style="width:100%;height:280px;object-fit:cover;border-radius:24px;" onerror="this.parentNode.innerHTML='<div class=banner-visual style=background:linear-gradient(135deg,${bg},${bg}99)><div><h2>${b.title}</h2><p>${b.sub||''}</p></div></div>'"><div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0.5),transparent);border-radius:24px;display:flex;align-items:center;padding:40px;"><div><h2 style="font-family:'Fredoka One',cursive;font-size:32px;color:#fff;text-shadow:2px 2px 8px rgba(0,0,0,0.5);">${b.title}</h2><p style="color:rgba(255,255,255,0.9);margin-top:8px;">${b.sub||''}</p></div></div></div>`
+      : `<div class="banner-visual" style="background:linear-gradient(135deg,${bg},${adjustColor(bg,-30)});"><div><h2>${b.title}</h2><p style="color:rgba(255,255,255,0.9);margin-top:8px;font-size:15px;">${b.sub||''}</p></div></div>`;
+    return `<div class="banner-slide${i===0?' active':''}" id="bslide-${i}">${content}</div>`;
+  }).join('');
+  let dots = banners.map((_,i)=>`<div class="banner-dot${i===0?' active':''}" onclick="goBanner(${i})"></div>`).join('');
+  zone.innerHTML = `<div class="banner-zone" style="position:relative;">${slides}<div class="banner-dots">${dots}</div></div>`;
+  clearInterval(window._bannerTimer);
+  let cur=0;
+  window._bannerTimer = setInterval(()=>{ cur=(cur+1)%banners.length; goBanner(cur); },5000);
+}
+
+function goBanner(i) {
+  document.querySelectorAll('.banner-slide').forEach((s,j)=>s.classList.toggle('active',j===i));
+  document.querySelectorAll('.banner-dot').forEach((d,j)=>d.classList.toggle('active',j===i));
+}
+
+function adjustColor(hex, amt) {
+  try{
+    let n=parseInt(hex.replace('#',''),16),r=(n>>16)+amt,g=(n>>8&0xff)+amt,b=(n&0xff)+amt;
+    return '#'+((1<<24)+(Math.min(255,Math.max(0,r))<<16)+(Math.min(255,Math.max(0,g))<<8)+Math.min(255,Math.max(0,b))).toString(16).slice(1);
+  }catch{return hex;}
+}
+
+async function renderHomeNotices() {
+  const grid = document.getElementById('noticesGrid');
+  const notices = await DATA.getAll('notices');
+  if(!notices.length){ grid.innerHTML='<p style="color:#888;text-align:center;padding:24px;">No notices posted yet.</p>'; return; }
+  grid.innerHTML = notices.map(n=>`
+    <div class="notice-card" onclick="openNoticeModal('${n.id}','${encodeURIComponent(n.title)}','${encodeURIComponent(n.content||'')}','${n.cat||'General'}','${n.date||''}')">
+      <span class="tag">${n.cat||'General'}</span>
+      <h4>${n.title}</h4>
+      <p>${(n.content||'').slice(0,120)}${(n.content||'').length>120?'...':''}</p>
+      <div class="date">📅 ${n.date||''}</div>
+    </div>`).join('');
+}
+
+function openNoticeModal(id,title,content,cat,date) {
+  document.getElementById('modalTitle').textContent=decodeURIComponent(title);
+  document.getElementById('modalBody').innerHTML=`<span class="badge badge-gold" style="margin-bottom:12px;display:inline-block;">${cat}</span><p style="line-height:1.9;font-size:15px;">${decodeURIComponent(content)}</p><p style="color:#aaa;font-size:13px;margin-top:16px;">📅 ${date}</p>`;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+async function renderHomeVideos() {
+  const grid = document.getElementById('videosGrid');
+  const videos = await DATA.getAll('videos');
+  if(!videos.length){ grid.innerHTML='<p style="color:#888;text-align:center;padding:24px;">No videos posted yet.</p>'; return; }
+  grid.innerHTML = videos.map(v=>`
+    <div class="video-card">
+      <div class="video-thumb" onclick="playVideoModal('${v.url}','${encodeURIComponent(v.title)}')">
+        <img src="https://img.youtube.com/vi/${v.url}/hqdefault.jpg" onerror="this.style.display='none'">
+        <div class="play-overlay"><div class="play-btn">▶</div></div>
+      </div>
+      <div class="video-info"><h4>${v.title}</h4><span>${v.desc||''}</span><span style="margin-top:4px;">📅 ${v.date||''}</span></div>
+    </div>`).join('');
+}
+
+function playVideoModal(id,title) {
+  document.getElementById('modalTitle').textContent=decodeURIComponent(title);
+  document.getElementById('modalBody').innerHTML=`<div style="position:relative;padding-bottom:56.25%;height:0;"><iframe style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;" src="https://www.youtube.com/embed/${id}?autoplay=1" allowfullscreen></iframe></div>`;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+function closeModal(){ document.getElementById('modalOverlay').classList.add('hidden'); document.getElementById('modalBody').innerHTML=''; }
+
+// ============================================================
+// PROGRAMMES PAGE
+// ============================================================
+let progsCache = null;
+async function renderProgrammes() {
+  progsCache = await loadAllProgDetails();
+  await renderProgTabContent('daycare');
+}
+
+async function loadAllProgDetails() {
+  const result = {};
+  if(IS_CONFIGURED && _sb) {
+    try {
+      const {data,error} = await _sb.from('prog_details').select('*');
+      if(!error && data && data.length>0) {
+        data.forEach(row=>{ result[row.id]=row; });
+        for(const k of ['daycare','prenursery','nursery','kindergarten','lkg'])
+          if(!result[k]) result[k]=DEFAULT_PROGS[k];
+        return result;
+      }
+    } catch(e){ console.warn('prog_details error:',e); }
+  }
+  for(const k of ['daycare','prenursery','nursery','kindergarten','lkg'])
+    result[k] = LS.get('prog_details_'+k) || DEFAULT_PROGS[k];
+  return result;
+}
+
+async function renderProgTabContent(prog) {
+  const container = document.getElementById('prog-'+prog);
+  container.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Loading...</p></div>';
+  const d = progsCache ? progsCache[prog] : (await DATA.getDoc('prog_details',prog) || DEFAULT_PROGS[prog]);
+  const names={daycare:'Daycare 🌙',prenursery:'Pre Nursery 🌱',nursery:'Nursery 🌸',kindergarten:'Kindergarten 🌟',lkg:'LKG 🎓'};
+  const activities = await DATA.getAllWhere('activities','prog','==',prog);
+  const notebooks  = await DATA.getAllWhere('notebooks','prog','==',prog);
+
+  container.innerHTML = `
+    <div class="prog-detail-grid">
+      <div class="prog-info-card">
+        <h3>${names[prog]}</h3>
+        ${infoRow('Age Group',d.age)} ${infoRow('Annual Fees',`<span style="color:var(--red);font-weight:700;">₹${parseInt(d.fees||0).toLocaleString()}</span>`)}
+        ${infoRow('Admission Fee','₹'+parseInt(d.admfee||0).toLocaleString())} ${infoRow('Timings',d.timing)}
+        ${infoRow('Total Seats',d.seats)} ${infoRow('Dress Code',d.dress)} ${infoRow('Kit Includes',d.kit)}
+        <div style="margin-top:16px;padding:14px;background:#fff8f0;border-radius:12px;font-size:13px;color:#555;line-height:1.7;">${d.desc||''}</div>
+        <button class="btn btn-red" style="margin-top:16px;width:100%;" onclick="showPage('admissions')">📝 Apply Now</button>
+      </div>
+      <div class="activity-section">
+        <h3>📊 Programme Highlights</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+          <div style="background:#fff8f0;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:24px;">⏰</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:6px;">${d.timing}</div><div style="font-size:11px;color:#888;">Timings</div></div>
+          <div style="background:#fff8f0;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:24px;">👗</div><div style="font-size:12px;font-weight:700;color:var(--navy);margin-top:6px;">${d.dress}</div><div style="font-size:11px;color:#888;">Dress Code</div></div>
+          <div style="background:#fff8f0;border-radius:12px;padding:16px;text-align:center;"><div style="font-size:24px;">💰</div><div style="font-size:12px;font-weight:700;color:var(--red);margin-top:6px;">₹${parseInt(d.fees||0).toLocaleString()}/yr</div><div style="font-size:11px;color:#888;">Annual Fee</div></div>
+        </div>
+        <h3>🗓️ Today's Activities</h3>
+        <div class="activity-grid">
+          ${activities.length ? activities.map(a=>`<div class="activity-card"><div class="emoji">${a.emoji||'📌'}</div><h4>${a.name}</h4><p>⏰ ${a.time}</p><p style="margin-top:4px;">${a.desc||''}</p></div>`).join('') : '<p style="color:#aaa;padding:12px;">No activities set yet.</p>'}
+        </div>
+      </div>
+    </div>
+    <div class="activity-section" style="margin-top:24px;">
+      <h3>📓 Class Notebook – Recent Photos</h3>
+      ${notebooks.length
+        ? `<div class="notebook-grid">${notebooks.map(n=>`<div class="notebook-img" onclick="viewNotebookPhoto('${n.imgUrl}','${encodeURIComponent(n.title||'')}')"><img src="${n.imgUrl}" alt="${n.title||'notebook'}" onerror="this.parentNode.innerHTML='<div style=font-size:48px;>📷</div>'"><div class="date-tag">${n.date||''}</div></div>`).join('')}</div>`
+        : '<p style="text-align:center;padding:24px;color:#888;">No notebook photos uploaded yet. Admin will upload after class.</p>'}
+    </div>`;
+}
+
+function viewNotebookPhoto(url,title) {
+  document.getElementById('modalTitle').textContent=decodeURIComponent(title)||'Notebook Photo';
+  document.getElementById('modalBody').innerHTML=`<img src="${url}" style="width:100%;border-radius:12px;" alt="notebook">`;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+function infoRow(key,val){ return `<div class="info-row"><span class="key">${key}</span><span class="val">${val}</span></div>`; }
+
+function switchProgTab(prog) {
+  const order=['daycare','prenursery','nursery','kindergarten','lkg'];
+  document.querySelectorAll('.prog-tab').forEach((t,i)=>t.classList.toggle('active',order[i]===prog));
+  document.querySelectorAll('.prog-content').forEach(c=>c.classList.remove('active'));
+  const el = document.getElementById('prog-'+prog);
+  el.classList.add('active');
+  // lazy load if empty
+  if(!el.querySelector('.prog-info-card')) renderProgTabContent(prog);
+}
+
+// STUDENT SEARCH
+async function searchStudent() {
+  const q = document.getElementById('studentSearch').value.trim().toLowerCase();
+  if(!q){ showToast('Enter a name or roll number','error'); return; }
+  const res = document.getElementById('studentResult');
+  res.innerHTML='<div class="loading-spinner"><div class="spinner"></div><p>Searching...</p></div>';
+  const students = await DATA.getAll('students');
+  const found = students.filter(s=>s.name.toLowerCase().includes(q)||s.roll.toLowerCase().includes(q));
+  if(!found.length){ res.innerHTML='<p style="text-align:center;color:#888;padding:20px;">No student found. Please check the name or roll number.</p>'; return; }
+  const progNames={daycare:'Daycare',prenursery:'Pre Nursery',nursery:'Nursery',kindergarten:'Kindergarten',lkg:'LKG'};
+  const fees = await DATA.getAll('fees');
+  res.innerHTML = found.map(s=>{
+    const sf = fees.filter(f=>f.roll===s.roll);
+    return `<div class="student-card">
+      <div class="student-avatar">${s.name[0].toUpperCase()}</div>
+      <div>
+        <h3 style="font-family:'Fredoka One',cursive;font-size:22px;color:var(--navy);">${s.name}</h3>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:13px;color:#666;">
+          <span>📋 ${s.roll}</span><span>📚 ${progNames[s.prog]||s.prog}</span><span>📅 ${s.dob||'N/A'}</span><span>👨‍👩‍👧 ${s.parent||'N/A'}</span><span>📞 ${s.phone||'N/A'}</span>
+        </div>
+        ${sf.length ? `<h4 style="margin-top:16px;color:var(--navy);font-size:15px;">💰 Fee Record</h4>
+          <table class="fee-table"><thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>Mode</th><th>Receipt</th></tr></thead>
+          <tbody>${sf.map(f=>`<tr><td>${f.month}</td><td>₹${f.amount}</td><td class="${f.status==='Paid'?'paid':f.status==='Unpaid'?'unpaid':'partial'}">${f.status}</td><td>${f.mode||'-'}</td><td>${f.receipt||'-'}</td></tr>`).join('')}</tbody></table>`
+          : '<p style="font-size:13px;color:#aaa;margin-top:12px;">No fee records found.</p>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// ADMISSIONS PAGE
+// ============================================================
+async function renderAdmissions() {
+  renderSeats();
+  renderAdmissionDetails();
+}
+
+async function renderSeats() {
+  const progs = await loadAllProgDetails();
+  const students = await DATA.getAll('students');
+  const confirmed = (await DATA.getAllWhere('admissions','status','==','confirmed'));
+  const names={daycare:'Daycare 🌙',prenursery:'Pre Nursery 🌱',nursery:'Nursery 🌸',kindergarten:'Kindergarten 🌟',lkg:'LKG 🎓'};
+  document.getElementById('seatsGrid').innerHTML = Object.entries(progs).map(([key,d])=>{
+    const occ = students.filter(s=>s.prog===key).length + confirmed.filter(a=>a.prog===key).length;
+    const total = parseInt(d.seats)||30;
+    const avail = Math.max(0,total-occ);
+    const pct = Math.min(100,Math.round(occ/total*100));
+    const cls = avail===0?'none':avail<=5?'low':'';
+    const color = avail===0?'var(--red)':avail<=5?'var(--gold)':'var(--green)';
+    return `<div class="seat-card"><h4>${names[key]}</h4>
+      <div class="seat-progress"><div class="seat-bar${pct>=90?' full':''}" style="width:${pct}%"></div></div>
+      <div class="seat-nums"><span>Occupied: ${occ}</span><span>Total: ${total}</span></div>
+      <div style="font-size:28px;font-weight:800;color:${color};margin-top:8px;">${avail}</div>
+      <div style="font-size:12px;color:#888;">${avail===0?'❌ Seats Full':'✅ Seats Available'}</div>
+    </div>`;
+  }).join('');
+}
+
+async function renderAdmissionDetails() {
+  const progs = await loadAllProgDetails();
+  const names={daycare:'Daycare 🌙',prenursery:'Pre Nursery 🌱',nursery:'Nursery 🌸',kindergarten:'Kindergarten 🌟',lkg:'LKG 🎓'};
+  document.getElementById('admissionDetails').innerHTML = Object.entries(progs).map(([key,d])=>`
+    <div class="prog-detail-block">
+      <div class="prog-detail-head" onclick="toggleDetail('${key}')"><span>${names[key]}</span><span>▾</span></div>
+      <div class="prog-detail-body" id="detail-${key}">
+        <div class="detail-3col">
+          <div class="detail-item"><div class="dk">Age Group</div><div class="dv">${d.age}</div></div>
+          <div class="detail-item"><div class="dk">Annual Fees</div><div class="dv" style="color:var(--red);font-weight:700;">₹${parseInt(d.fees||0).toLocaleString()}</div></div>
+          <div class="detail-item"><div class="dk">Admission Fee</div><div class="dv">₹${parseInt(d.admfee||0).toLocaleString()}</div></div>
+          <div class="detail-item"><div class="dk">Monthly Fee</div><div class="dv">₹${Math.round(parseInt(d.fees||0)/12).toLocaleString()}/month</div></div>
+          <div class="detail-item"><div class="dk">Timings</div><div class="dv">${d.timing}</div></div>
+          <div class="detail-item"><div class="dk">Total Seats</div><div class="dv">${d.seats}</div></div>
+          <div class="detail-item"><div class="dk">Dress Code</div><div class="dv">${d.dress}</div></div>
+          <div class="detail-item"><div class="dk">Kit Includes</div><div class="dv">${d.kit}</div></div>
+          <div class="detail-item"><div class="dk">Curriculum</div><div class="dv">CBSE + Montessori</div></div>
+        </div>
+        <div style="margin-top:16px;padding:16px;background:#f9f9f9;border-radius:12px;font-size:14px;color:#555;">${d.desc||''}</div>
+        <button class="btn btn-red" style="margin-top:16px;" onclick="document.getElementById('af-prog').value='${key}';document.querySelector('[id=af-name]').scrollIntoView({behavior:'smooth'});">📝 Apply for ${d.name||key}</button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleDetail(key){ const b=document.getElementById('detail-'+key); b&&b.classList.toggle('open'); }
+
+async function submitAdmissionForm() {
+  const name=document.getElementById('af-name').value.trim();
+  const dob=document.getElementById('af-dob').value;
+  const gender=document.getElementById('af-gender').value;
+  const prog=document.getElementById('af-prog').value;
+  const father=document.getElementById('af-father').value.trim();
+  const phone=document.getElementById('af-phone').value.trim();
+  const address=document.getElementById('af-address').value.trim();
+  if(!name||!dob||!gender||!prog||!father||!phone||!address){ showToast('Please fill all required (*) fields','error'); return; }
+  if(!/^\d{10}$/.test(phone)){ showToast('Enter valid 10-digit phone number','error'); return; }
+  await DATA.add('admissions',{name,dob,gender,prog,father,mother:document.getElementById('af-mother').value,phone,email:document.getElementById('af-email').value,address,prev:document.getElementById('af-prev').value,source:document.getElementById('af-source').value,status:'pending',date:today()});
+  showToast('Application submitted! Admin will review & confirm.','success');
+  ['af-name','af-dob','af-father','af-mother','af-phone','af-email','af-address','af-prev'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('af-gender').value=''; document.getElementById('af-prog').value='';
+  renderSeats();
+}
+
+// ============================================================
+// ADMIN PAGE
+// ============================================================
+async function renderAdmin() {
+  renderFbStatus();
+  await renderAdminStats();
+  await renderAdminBanners();
+  await renderAdminNotices();
+  await renderAdminVideos();
+  await renderAdminNotebooks();
+  await renderAdminActivities();
+  await renderAdminAdmissions();
+  await renderAdminStudents();
+  await renderAdminFees();
+  loadProgDetailsForm();
+}
+
+function renderFbStatus() {
+  const tag = document.getElementById('fbStatusTag');
+  if(!tag) return;
+  tag.innerHTML = IS_CONFIGURED
+    ? `<span class="fs-tag fs-live">🟢 Supabase Connected — All data stored in cloud</span>`
+    : `<span class="fs-tag fs-local">⚠️ Supabase not configured — Using browser storage</span>`;
+  const info = document.getElementById('fbConnectionInfo');
+  if(!info) return;
+  if(IS_CONFIGURED) {
+    info.innerHTML=`<div style="background:#e8f5e9;border-radius:12px;padding:16px;font-size:14px;color:#1b5e20;">
+      <strong>🟢 Connected to Supabase</strong><br>
+      <span style="font-size:13px;color:#388e3c;">
+      ✅ PostgreSQL Database — All student, fee, admission data stored here<br>
+      ✅ Supabase Storage — All notebook photos stored here<br>
+      ✅ Supabase Auth — Admin login secured<br>
+      📊 Free tier: 500MB database, 1GB storage, 50,000 monthly active users — <strong>No card needed!</strong>
+      </span></div>`;
+  } else {
+    info.innerHTML=`<div style="background:#fff3e0;border-radius:12px;padding:16px;font-size:14px;color:#e65100;">
+      <strong>⚠️ Supabase Not Configured Yet</strong><br>Data is saved to browser storage as fallback.<br><br>
+      <strong>To connect (free, no card needed):</strong><br>
+      1. Go to <a href="https://supabase.com" target="_blank" style="color:var(--red);">supabase.com</a> → Sign up free<br>
+      2. Create a new project → Go to Settings → API<br>
+      3. Copy Project URL and anon key<br>
+      4. Open this HTML file in Notepad → Find SUPABASE_CONFIG → paste your values<br>
+      5. Run the SQL setup script in Supabase SQL Editor<br>
+      6. Drag & drop this file to <a href="https://netlify.com" target="_blank" style="color:var(--red);">netlify.com</a> — site goes live instantly!
+    </div>`;
+  }
+}
+
+async function renderAdminStats() {
+  const [students,pending,notices,videos] = await Promise.all([
+    DATA.getAll('students'),
+    DATA.getAllWhere('admissions','status','==','pending'),
+    DATA.getAll('notices'),
+    DATA.getAll('videos')
+  ]);
+  document.getElementById('statsCards').innerHTML = [
+    ['👥 Students',students.length,'Total enrolled','var(--red)'],
+    ['📝 Pending',pending.length,'Admission requests','var(--navy)'],
+    ['📢 Notices',notices.length,'Posted notices','var(--gold)'],
+    ['🎬 Videos',videos.length,'School videos','var(--green)']
+  ].map(([l,n,s,c])=>`<div class="stat-tile" style="background:${c};"><div class="big">${n}</div><div class="lbl">${l}</div><div class="lbl" style="font-size:11px;">${s}</div></div>`).join('');
+}
+
+function showAdminPanel(p, el) {
+  if(!currentUser||currentUser.role!=='admin'){showToast('Access denied','error');return;}
+  document.querySelectorAll('.admin-panel').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.admin-menu-item').forEach(e=>e.classList.remove('active'));
+  document.getElementById('ap-'+p).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+// -- BANNERS ADMIN --
+let bannerFileData = null;
+function previewBannerFile(inp) {
+  if(inp.files[0]){ document.getElementById('b-file-name').textContent='📎 '+inp.files[0].name; bannerFileData=inp.files[0]; }
+}
+
+async function addBanner() {
+  const title=document.getElementById('b-title').value.trim();
+  if(!title){showToast('Title required','error');return;}
+  showToast('Uploading banner...','info');
+  let imgUrl = document.getElementById('b-imgurl').value.trim();
+  if(bannerFileData && !imgUrl) {
+    imgUrl = await DATA.uploadFile(bannerFileData, `banners/${Date.now()}_${bannerFileData.name}`);
+  }
+  await DATA.add('banners',{title,sub:document.getElementById('b-sub').value,imgUrl,color:document.getElementById('b-color').value});
+  document.getElementById('b-title').value=''; document.getElementById('b-sub').value=''; document.getElementById('b-imgurl').value='';
+  document.getElementById('b-file-name').textContent=''; bannerFileData=null;
+  await renderAdminBanners();
+}
+
+async function renderAdminBanners() {
+  const el=document.getElementById('bannersListAdmin'); if(!el) return;
+  const list=await DATA.getAll('banners');
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Title</th><th>Sub Text</th><th>Image</th><th>Action</th></tr></thead><tbody>${list.map(b=>`<tr><td>${b.title}</td><td>${b.sub||''}</td><td>${b.imgUrl?`<a href="${b.imgUrl}" target="_blank" style="color:var(--red)">View Image</a>`:'(gradient)'}</td><td><button class="action-btn action-reject" onclick="deleteBanner('${b.id}')">🗑️ Delete</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No banners yet.</p>';
+}
+async function deleteBanner(id){await DATA.delete('banners',id);await renderAdminBanners();showToast('Banner removed');}
+
+// -- NOTICES ADMIN --
+async function addNotice() {
+  const title=document.getElementById('n-title').value.trim(), content=document.getElementById('n-content').value.trim();
+  if(!title||!content){showToast('Fill title and content','error');return;}
+  await DATA.add('notices',{title,cat:document.getElementById('n-cat').value,content,date:today()});
+  document.getElementById('n-title').value=''; document.getElementById('n-content').value='';
+  await renderAdminNotices();
+}
+async function renderAdminNotices(){
+  const el=document.getElementById('noticesListAdmin'); if(!el) return;
+  const list=await DATA.getAll('notices');
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Action</th></tr></thead><tbody>${list.map(n=>`<tr><td>${n.title}</td><td>${n.cat||'-'}</td><td>${n.date||'-'}</td><td><button class="action-btn action-reject" onclick="deleteNotice('${n.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No notices yet.</p>';
+}
+async function deleteNotice(id){await DATA.delete('notices',id);await renderAdminNotices();showToast('Notice deleted');}
+
+// -- VIDEOS ADMIN --
+async function addVideo() {
+  const title=document.getElementById('v-title').value.trim(); let url=document.getElementById('v-url').value.trim();
+  if(!title||!url){showToast('Fill title and URL','error');return;}
+  const m=url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(m) url=m[1];
+  await DATA.add('videos',{title,url,desc:document.getElementById('v-desc').value,date:document.getElementById('v-date').value||today()});
+  ['v-title','v-url','v-desc','v-date'].forEach(id=>document.getElementById(id).value='');
+  await renderAdminVideos();
+}
+async function renderAdminVideos(){
+  const el=document.getElementById('videosListAdmin'); if(!el) return;
+  const list=await DATA.getAll('videos');
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Title</th><th>YouTube ID</th><th>Date</th><th>Action</th></tr></thead><tbody>${list.map(v=>`<tr><td>${v.title}</td><td><a href="https://youtu.be/${v.url}" target="_blank" style="color:var(--red);">${v.url}</a></td><td>${v.date}</td><td><button class="action-btn action-reject" onclick="deleteVideo('${v.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No videos yet.</p>';
+}
+async function deleteVideo(id){await DATA.delete('videos',id);await renderAdminVideos();showToast('Video deleted');}
+
+// -- NOTEBOOKS ADMIN --
+let nbFileData=null;
+function previewNbFile(inp) {
+  if(inp.files[0]){ document.getElementById('nb-file-name').textContent='📎 '+inp.files[0].name; nbFileData=inp.files[0]; }
+}
+
+async function addNotebook() {
+  const prog=document.getElementById('nb-prog').value;
+  const title=document.getElementById('nb-title').value;
+  const dateVal=document.getElementById('nb-date').value||today();
+  let imgUrl=document.getElementById('nb-urlpaste').value.trim();
+
+  if(!imgUrl && !nbFileData){ showToast('Select a file or paste an image URL','error'); return; }
+
+  if(nbFileData && !imgUrl) {
+    showToast('Uploading photo to Supabase Storage...','info');
+    const progressBar=document.getElementById('nb-progress-bar');
+    const bar=document.getElementById('nb-bar');
+    const txt=document.getElementById('nb-progress-text');
+    progressBar.classList.remove('hidden');
+    imgUrl = await DATA.uploadFile(nbFileData, `notebooks/${prog}/${Date.now()}_${nbFileData.name}`, pct=>{
+      bar.style.width=pct+'%'; txt.textContent=`Uploading... ${pct}%`;
+    });
+    progressBar.classList.add('hidden'); txt.textContent='✅ Upload complete!';
+    setTimeout(()=>{ txt.textContent=''; },3000);
+  }
+
+  await DATA.add('notebooks',{prog,title,imgUrl,date:dateVal});
+  document.getElementById('nb-title').value=''; document.getElementById('nb-date').value=''; document.getElementById('nb-urlpaste').value='';
+  document.getElementById('nb-file-name').textContent=''; nbFileData=null;
+  await renderAdminNotebooks();
+}
+
+async function renderAdminNotebooks(){
+  const el=document.getElementById('notebookListAdmin'); if(!el) return;
+  const list=await DATA.getAll('notebooks');
+  const progNames={daycare:'Daycare',prenursery:'Pre Nursery',nursery:'Nursery',kindergarten:'Kindergarten',lkg:'LKG'};
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Programme</th><th>Title</th><th>Date</th><th>Preview</th><th>Action</th></tr></thead><tbody>${list.map(n=>`<tr><td>${progNames[n.prog]||n.prog}</td><td>${n.title||'-'}</td><td>${n.date||'-'}</td><td><a href="${n.imgUrl}" target="_blank" style="color:var(--red);">View</a></td><td><button class="action-btn action-reject" onclick="deleteNotebook('${n.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No photos uploaded yet.</p>';
+}
+async function deleteNotebook(id){await DATA.delete('notebooks',id);await renderAdminNotebooks();showToast('Photo deleted');}
+
+// -- ACTIVITIES ADMIN --
+async function addActivity() {
+  const name=document.getElementById('act-name').value.trim(), time=document.getElementById('act-time').value.trim();
+  if(!name||!time){showToast('Activity name and time required','error');return;}
+  await DATA.add('activities',{prog:document.getElementById('act-prog').value,emoji:document.getElementById('act-emoji').value||'📌',name,time,desc:document.getElementById('act-desc').value});
+  ['act-name','act-time','act-emoji','act-desc'].forEach(id=>document.getElementById(id).value='');
+  await renderAdminActivities();
+}
+async function renderAdminActivities(){
+  const el=document.getElementById('activitiesListAdmin'); if(!el) return;
+  const list=await DATA.getAll('activities');
+  const pn={daycare:'Daycare',prenursery:'Pre Nursery',nursery:'Nursery',kindergarten:'Kindergarten',lkg:'LKG'};
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Programme</th><th>Activity</th><th>Time</th><th>Description</th><th>Action</th></tr></thead><tbody>${list.map(a=>`<tr><td>${pn[a.prog]||a.prog}</td><td>${a.emoji||''} ${a.name}</td><td>${a.time}</td><td>${a.desc||''}</td><td><button class="action-btn action-reject" onclick="deleteActivity('${a.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No activities yet.</p>';
+}
+async function deleteActivity(id){await DATA.delete('activities',id);await renderAdminActivities();showToast('Activity deleted');}
+
+// -- PROG DETAILS ADMIN --
+async function loadProgDetailsForm(){
+  const prog=document.getElementById('pd-prog')?.value; if(!prog) return;
+  const d=await DATA.getDoc('prog_details',prog)||DEFAULT_PROGS[prog]||{};
+  ['age','fees','admfee','timing','seats','dress','kit','desc'].forEach(f=>{
+    const el=document.getElementById('pd-'+f); if(el) el.value=d[f]||'';
+  });
+}
+async function saveProgDetails(){
+  const prog=document.getElementById('pd-prog').value;
+  const data={};
+  ['age','fees','admfee','timing','seats','dress','kit','desc'].forEach(f=>{ data[f]=document.getElementById('pd-'+f).value; });
+  data.name=DEFAULT_PROGS[prog]?.name||prog;
+  await DATA.setDoc('prog_details',prog,data);
+  progsCache=null;
+}
+
+// -- ADMISSIONS ADMIN --
+async function renderAdminAdmissions(){
+  const all=await DATA.getAll('admissions');
+  const pending=all.filter(a=>a.status==='pending');
+  const confirmed=all.filter(a=>a.status==='confirmed');
+  const pn={daycare:'Daycare',prenursery:'Pre Nursery',nursery:'Nursery',kindergarten:'Kindergarten',lkg:'LKG'};
+  const pTable=document.getElementById('admReqTable'), cTable=document.getElementById('confirmedAdmTable');
+  if(pTable) pTable.innerHTML=pending.length?`<table class="data-table"><thead><tr><th>Name</th><th>Programme</th><th>Parent</th><th>Phone</th><th>Date</th><th>Actions</th></tr></thead><tbody>${pending.map(a=>`<tr><td><strong>${a.name}</strong></td><td>${pn[a.prog]||a.prog}</td><td>${a.father}</td><td>${a.phone}</td><td>${a.date||'-'}</td><td><button class="action-btn action-confirm" onclick="confirmAdmission('${a.id}','${a.name}','${a.prog}','${a.dob||''}','${a.father||''}','${a.phone||''}')">✅ Confirm</button><button class="action-btn action-reject" onclick="rejectAdmission('${a.id}')">❌ Reject</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;padding:12px;">No pending requests. 🎉</p>';
+  if(cTable) cTable.innerHTML=confirmed.length?`<table class="data-table"><thead><tr><th>Name</th><th>Programme</th><th>Roll No</th><th>Confirmed On</th></tr></thead><tbody>${confirmed.map(a=>`<tr><td>${a.name}</td><td>${pn[a.prog]||a.prog}</td><td><strong style="color:var(--green);">${a.roll||'-'}</strong></td><td>${a.date||'-'}</td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;padding:12px;">No confirmed admissions yet.</p>';
+}
+
+async function confirmAdmission(id,name,prog,dob,parent,phone) {
+  const roll=await generateRoll(prog);
+  await DATA.update('admissions',id,{status:'confirmed',roll});
+  await DATA.add('students',{name,roll,prog,dob,parent,phone});
+  showToast(`✅ Admission confirmed! Roll No: ${roll}`,'success');
+  await renderAdminAdmissions();
+  await renderAdminStudents();
+  await renderAdminStats();
+}
+
+async function rejectAdmission(id){
+  await DATA.update('admissions',id,{status:'rejected'});
+  showToast('Admission rejected');
+  await renderAdminAdmissions();
+}
+
+async function generateRoll(prog){
+  const yr=new Date().getFullYear();
+  const pf={daycare:'DC',prenursery:'PN',nursery:'NR',kindergarten:'KG',lkg:'LKG'};
+  const students=await DATA.getAllWhere('students','prog','==',prog);
+  return `${yr}-${pf[prog]||'XX'}-${String(students.length+1).padStart(3,'0')}`;
+}
+
+// -- STUDENTS ADMIN --
+async function addStudent(){
+  const name=document.getElementById('s-name').value.trim(), roll=document.getElementById('s-roll').value.trim();
+  if(!name||!roll){showToast('Name and Roll No required','error');return;}
+  const all=await DATA.getAll('students');
+  if(all.find(s=>s.roll===roll)){showToast('Roll number already exists','error');return;}
+  await DATA.add('students',{name,roll,prog:document.getElementById('s-prog').value,dob:document.getElementById('s-dob').value,parent:document.getElementById('s-parent').value,phone:document.getElementById('s-phone').value});
+  ['s-name','s-roll','s-dob','s-parent','s-phone'].forEach(id=>document.getElementById(id).value='');
+  await renderAdminStudents();
+  await renderAdminStats();
+}
+
+async function renderAdminStudents(){
+  const el=document.getElementById('studentsTable'); if(!el) return;
+  allStudentsCache=await DATA.getAll('students');
+  renderStudentTable(allStudentsCache);
+}
+
+function renderStudentTable(students){
+  const el=document.getElementById('studentsTable'); if(!el) return;
+  const pn={daycare:'Daycare',prenursery:'Pre Nursery',nursery:'Nursery',kindergarten:'Kindergarten',lkg:'LKG'};
+  el.innerHTML=students.length?`<table class="data-table"><thead><tr><th>Name</th><th>Roll No</th><th>Programme</th><th>Parent</th><th>Phone</th><th>Action</th></tr></thead><tbody>${students.map(s=>`<tr><td><strong>${s.name}</strong></td><td style="color:var(--navy);font-weight:700;">${s.roll}</td><td>${pn[s.prog]||s.prog}</td><td>${s.parent||'-'}</td><td>${s.phone||'-'}</td><td><button class="action-btn action-reject" onclick="deleteStudent('${s.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No students yet.</p>';
+}
+
+function filterStudents(){
+  const q=document.getElementById('studentFilter').value.toLowerCase();
+  const filtered=allStudentsCache.filter(s=>s.name.toLowerCase().includes(q)||s.roll.toLowerCase().includes(q)||(s.prog||'').includes(q));
+  renderStudentTable(filtered);
+}
+
+async function deleteStudent(id){await DATA.delete('students',id);await renderAdminStudents();await renderAdminStats();showToast('Student deleted');}
+
+// -- FEES ADMIN --
+async function addFee(){
+  const roll=document.getElementById('f-roll').value.trim(), amount=document.getElementById('f-amount').value.trim();
+  if(!roll||!amount){showToast('Roll No and Amount required','error');return;}
+  const students=await DATA.getAll('students');
+  if(!students.find(s=>s.roll===roll)){showToast('Student not found with this roll number','error');return;}
+  await DATA.add('fees',{roll,month:document.getElementById('f-month').value,amount,status:document.getElementById('f-status').value,mode:document.getElementById('f-mode').value,receipt:document.getElementById('f-receipt').value,date:today()});
+  ['f-roll','f-amount','f-receipt'].forEach(id=>document.getElementById(id).value='');
+  await renderAdminFees();
+}
+async function renderAdminFees(){
+  const el=document.getElementById('feesTable'); if(!el) return;
+  const list=await DATA.getAll('fees');
+  el.innerHTML=list.length?`<table class="data-table"><thead><tr><th>Roll No</th><th>Month</th><th>Amount</th><th>Status</th><th>Mode</th><th>Receipt</th><th>Date</th></tr></thead><tbody>${list.map(f=>`<tr><td style="font-weight:700;color:var(--navy);">${f.roll}</td><td>${f.month}</td><td>₹${f.amount}</td><td><span class="status-badge ${f.status==='Paid'?'status-confirmed':f.status==='Unpaid'?'status-rejected':'status-pending'}">${f.status}</span></td><td>${f.mode||'-'}</td><td>${f.receipt||'-'}</td><td>${f.date||'-'}</td></tr>`).join('')}</tbody></table>`:'<p style="color:#aaa;">No fee records yet.</p>';
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function today(){ return new Date().toISOString().slice(0,10); }
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+(type||''); t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+function openSetupGuide(){
+  document.getElementById('modalTitle').textContent='🟢 Supabase + Netlify Setup Guide';
+  document.getElementById('modalBody').innerHTML=`<div style="font-size:14px;line-height:2;">
+    <p style="background:#e8f5e9;padding:12px;border-radius:8px;margin-bottom:16px;color:#1b5e20;"><strong>✅ 100% FREE — No credit card needed at any step!</strong></p>
+    <strong>Part 1 — Supabase Database Setup (5 minutes)</strong>
+    <ol style="padding-left:20px;margin-bottom:16px;">
+      <li>Go to <a href="https://supabase.com" target="_blank" style="color:var(--red);">supabase.com</a> → Sign up free with Google</li>
+      <li>Click <strong>New Project</strong> → Name: <code style="background:#f5f5f5;padding:2px 6px;border-radius:4px;">amazing-kidz</code> → Set any DB password → Create</li>
+      <li>Wait 2 minutes → Go to <strong>Settings → API</strong></li>
+      <li>Copy <strong>Project URL</strong> and <strong>anon public</strong> key</li>
+      <li>Open this HTML in Notepad → Find <code>SUPABASE_CONFIG</code> → Paste URL and Key</li>
+      <li>In Supabase → <strong>SQL Editor → New Query</strong> → Paste the SQL from the top of this file → Run</li>
+      <li>Go to <strong>Storage → New Bucket</strong> → Name: <code>school-media</code> → tick Public → Create</li>
+      <li>Go to <strong>Authentication → Providers → Email</strong> → Enable</li>
+      <li>Go to <strong>Authentication → Users → Add User</strong>: <code>admin@amazingkidz.com</code> / <code>Admin@123</code></li>
+    </ol>
+    <strong>Part 2 — Netlify Hosting (1 minute, drag & drop!)</strong>
+    <ol style="padding-left:20px;">
+      <li>Go to <a href="https://netlify.com" target="_blank" style="color:var(--red);">netlify.com</a> → Sign up free</li>
+      <li>Save this HTML file as <strong>index.html</strong> in a folder</li>
+      <li>On Netlify dashboard → <strong>drag & drop the folder</strong> onto the page</li>
+      <li>Site is instantly live at: <strong>amazingkidz.netlify.app</strong> 🎉</li>
+      <li>Optional: Go to Site Settings → rename to your preferred URL</li>
+    </ol>
+    <p style="background:#e8f5e9;padding:12px;border-radius:8px;margin-top:16px;color:var(--green);">💡 To update the site anytime: edit the HTML file → drag & drop the folder to Netlify again. Done in 30 seconds!</p>
+  </div>`;
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  // Show setup banner if not configured
+  if(!IS_CONFIGURED) document.getElementById('setupBanner').style.display='flex';
+
+  // Close modal on overlay click
+  document.getElementById('modalOverlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+
+  // Set today's date in date i
