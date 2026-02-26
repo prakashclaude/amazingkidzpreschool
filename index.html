@@ -6,51 +6,6 @@
 <title>Amazing Kidz Preschool – South Extension, New Delhi</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- ============================================================
-  🟢 SUPABASE SETUP — 100% FREE, NO CREDIT CARD NEEDED
-  ============================================================
-  STEP 1: Go to https://supabase.com → Click "Start your project"
-  STEP 2: Sign up FREE with Google or GitHub (no card needed)
-  STEP 3: Click "New Project" → Name: amazing-kidz → Set a DB password → Create
-  STEP 4: Wait ~2 minutes for project to be ready
-  STEP 5: Go to Settings → API → Copy "Project URL" and "anon public" key
-  STEP 6: Paste both values in SUPABASE_CONFIG section below
-  STEP 7: Go to SQL Editor → New Query → Copy the SQL block below → Run it
-  STEP 8: Go to Storage → New Bucket → Name: school-media → tick Public → Create
-  STEP 9: Go to Authentication → Providers → Email → Enable
-  STEP 10: Authentication → Users → Add User: admin@amazingkidz.com / Admin@123
-
-  🟢 DEPLOY ON NETLIFY — DRAG & DROP, NO COMMANDS NEEDED
-  ============================================================
-  STEP 1: Go to https://netlify.com → Sign up FREE (no card)
-  STEP 2: Rename this file to index.html
-  STEP 3: On Netlify dashboard → drag & drop the folder containing index.html
-  STEP 4: Your site is LIVE at: amazingkidz.netlify.app 🎉
-
-  🟢 SQL TO RUN IN SUPABASE SQL EDITOR (copy all lines below):
-  ============================================================
-  create table if not exists students (id uuid default gen_random_uuid() primary key, name text, roll text unique, prog text, dob text, parent text, phone text, created_at timestamptz default now());
-  create table if not exists fees (id uuid default gen_random_uuid() primary key, roll text, month text, amount text, status text, mode text, receipt text, date text, created_at timestamptz default now());
-  create table if not exists admissions (id uuid default gen_random_uuid() primary key, name text, dob text, gender text, prog text, father text, mother text, phone text, email text, address text, prev text, source text, status text default 'pending', roll text, date text, created_at timestamptz default now());
-  create table if not exists notices (id uuid default gen_random_uuid() primary key, title text, cat text, content text, date text, created_at timestamptz default now());
-  create table if not exists videos (id uuid default gen_random_uuid() primary key, title text, url text, description text, date text, created_at timestamptz default now());
-  create table if not exists banners (id uuid default gen_random_uuid() primary key, title text, sub text, img_url text, color text, created_at timestamptz default now());
-  create table if not exists activities (id uuid default gen_random_uuid() primary key, prog text, emoji text, name text, time text, description text, created_at timestamptz default now());
-  create table if not exists notebooks (id uuid default gen_random_uuid() primary key, prog text, title text, img_url text, date text, created_at timestamptz default now());
-  create table if not exists prog_details (id text primary key, name text, age text, fees text, admfee text, timing text, seats text, dress text, kit text, description text, updated_at timestamptz default now());
-  alter table students enable row level security; alter table fees enable row level security; alter table admissions enable row level security; alter table notices enable row level security; alter table videos enable row level security; alter table banners enable row level security; alter table activities enable row level security; alter table notebooks enable row level security; alter table prog_details enable row level security;
-  create policy "allow_all" on students for all using (true) with check (true);
-  create policy "allow_all" on fees for all using (true) with check (true);
-  create policy "allow_all" on admissions for all using (true) with check (true);
-  create policy "allow_all" on notices for all using (true) with check (true);
-  create policy "allow_all" on videos for all using (true) with check (true);
-  create policy "allow_all" on banners for all using (true) with check (true);
-  create policy "allow_all" on activities for all using (true) with check (true);
-  create policy "allow_all" on notebooks for all using (true) with check (true);
-  create policy "allow_all" on prog_details for all using (true) with check (true);
-  ============================================================ -->
-
-<!-- Supabase JS SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -386,21 +341,18 @@ textarea.inp{resize:vertical;min-height:80px;}
 </head>
 <body>
 
-<!-- SETUP BANNER (shown when Firebase not configured) -->
 <div class="setup-banner" id="setupBanner" style="display:none;">
   ⚠️ Supabase not configured yet — data is using browser storage temporarily.
   <span class="setup-step">Open this file → Find SUPABASE_URL → Paste your Supabase URL and key</span>
   <a onclick="openSetupGuide()">📖 View Setup Guide</a>
 </div>
 
-<!-- TOP BAR -->
 <div class="topbar">
   <span>📞 9891524876 | 9315928078 | 8076671261</span>
   <span>📍 WZ-10 B, South Extension Part-1, Uttam Nagar, New Delhi – 110059</span>
   <span>⏰ Mon–Sat: 8:00 AM – 2:00 PM</span>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="header-inner">
     <div class="logo-area" onclick="showPage('home')">
@@ -434,7 +386,6 @@ textarea.inp{resize:vertical;min-height:80px;}
   </div>
 </header>
 
-<!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-close" onclick="toggleMobileNav()">✕</button>
   <a onclick="showPage('home');toggleMobileNav()">🏠 Home</a>
@@ -445,14 +396,12 @@ textarea.inp{resize:vertical;min-height:80px;}
   <a onclick="showPage('login');toggleMobileNav()">🔐 Login</a>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 <script>
 window.toggleMobileNav=function(){var n=document.getElementById('mobileNav');if(n)n.classList.toggle('open');}
 window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)o.classList.add('hidden');var b=document.getElementById('modalBody');if(b)b.innerHTML='';}
 </script>
 
-<!-- MODAL -->
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal-box">
     <div class="modal-head">
@@ -463,7 +412,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== HOME PAGE =================== -->
 <div class="page active" id="page-home">
   <div style="padding:20px 20px 0;max-width:1300px;margin:0 auto;">
     <div id="bannerZone"><div class="banner-placeholder"><span>🏫</span><p>Loading banners...</p></div></div>
@@ -534,7 +482,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== ABOUT PAGE =================== -->
 <div class="page" id="page-about">
   <div class="about-hero"><h2>About Amazing Kidz Preschool</h2><p>Nurturing young minds since 2015 with love, care and Montessori excellence</p></div>
   <div class="section">
@@ -563,7 +510,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== PROGRAMMES PAGE =================== -->
 <div class="page" id="page-programmes">
   <div class="prog-header"><h2>📚 Our Programmes</h2><p>Comprehensive early childhood education tailored to every stage of development</p></div>
   <div class="prog-tabs">
@@ -590,7 +536,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== ADMISSIONS PAGE =================== -->
 <div class="page" id="page-admissions">
   <div class="admission-header"><h2>📝 Admissions 2024-25</h2><p>Secure a bright future for your child at Amazing Kidz Preschool</p></div>
   <div class="section">
@@ -622,7 +567,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== ADMIN PAGE =================== -->
 <div class="page" id="page-admin">
   <div style="background:linear-gradient(135deg,var(--navy),#2d3a7a);color:#fff;padding:32px 20px;">
     <div style="max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
@@ -650,12 +594,10 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
       </div>
     </div>
     <div>
-      <!-- OVERVIEW -->
       <div class="admin-panel active" id="ap-overview">
         <div class="stats-grid" id="statsCards"></div>
         <div class="admin-card"><h3>🟢 Supabase Connection Status</h3><div id="fbConnectionInfo"></div></div>
       </div>
-      <!-- BANNERS -->
       <div class="admin-panel" id="ap-banners">
         <div class="admin-card">
           <h3>🖼️ Add Banner / Poster</h3>
@@ -678,7 +620,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
         </div>
         <div class="admin-card"><h3>Current Banners</h3><div id="bannersListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- NOTICES -->
       <div class="admin-panel" id="ap-notices">
         <div class="admin-card">
           <h3>📢 Post New Notice</h3>
@@ -691,7 +632,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
         </div>
         <div class="admin-card"><h3>Posted Notices</h3><div id="noticesListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- VIDEOS -->
       <div class="admin-panel" id="ap-videos">
         <div class="admin-card">
           <h3>🎬 Add School Video</h3>
@@ -705,7 +645,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
         </div>
         <div class="admin-card"><h3>Posted Videos</h3><div id="videosListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- NOTEBOOKS -->
       <div class="admin-panel" id="ap-notebooks">
         <div class="admin-card">
           <h3>📓 Upload Notebook Photos</h3>
@@ -731,7 +670,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
         </div>
         <div class="admin-card"><h3>Uploaded Photos</h3><div id="notebookListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- ACTIVITIES -->
       <div class="admin-panel" id="ap-activities">
         <div class="admin-card">
           <h3>🗓️ Manage Daily Activities</h3>
@@ -746,7 +684,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
         </div>
         <div class="admin-card"><h3>All Activities</h3><div id="activitiesListAdmin"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- PROG DETAILS -->
       <div class="admin-panel" id="ap-progdetails">
         <div class="admin-card">
           <h3>📋 Update Programme Details</h3>
@@ -764,12 +701,10 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
           </div>
         </div>
       </div>
-      <!-- ADMISSIONS MGMT -->
       <div class="admin-panel" id="ap-admissions">
         <div class="admin-card"><h3>📝 Pending Admission Requests</h3><div id="admReqTable"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
         <div class="admin-card"><h3>✅ Confirmed Admissions</h3><div id="confirmedAdmTable"><div class="loading-spinner"><div class="spinner"></div></div></div></div>
       </div>
-      <!-- STUDENTS -->
       <div class="admin-panel" id="ap-students">
         <div class="admin-card">
           <h3>👥 Add Student Manually</h3>
@@ -791,7 +726,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
           <div id="studentsTable"><div class="loading-spinner"><div class="spinner"></div></div></div>
         </div>
       </div>
-      <!-- FEES -->
       <div class="admin-panel" id="ap-fees">
         <div class="admin-card">
           <h3>💰 Record Fee Payment</h3>
@@ -811,7 +745,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- =================== LOGIN PAGE =================== -->
 <div class="page" id="page-login">
   <div class="login-page">
     <div class="login-box">
@@ -835,7 +768,6 @@ window.closeModal=function(){var o=document.getElementById('modalOverlay');if(o)
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer style="background:var(--navy);color:#fff;padding:48px 20px 20px;">
   <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:36px;margin-bottom:36px;">
     <div><div style="font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:12px;color:var(--gold);">Amazing Kidz Preschool</div><p style="font-size:13px;opacity:.8;line-height:1.8;">Nurturing young minds since 2015 with love, care & Montessori excellence.</p></div>
@@ -1740,4 +1672,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Close modal on overlay click
   document.getElementById('modalOverlay').addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
 
-  // Set today's date in date i
+  // Set today's date in date inputs
+  document.querySelectorAll('input[type="date"]').forEach(el => {
+    if(!el.value) el.value = today();
+  });
+
+  // Initialize the app
+  await seedDefaultData();
+  renderHome();
+});
+</script>
+</body>
+</html>
